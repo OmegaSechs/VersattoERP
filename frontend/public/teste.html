@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo Versatto ERP - Brilho Roxo</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; /* Para evitar barras de rolagem */
+            background-color: rgb(167, 150, 150);
+        }
+
+        .logo {
+            position: absolute;
+            width: 600px; /* Aumente o tamanho do logo */
+            animation: moveInTriangle 10s linear infinite;
+            filter: drop-shadow(0 0 15px rgba(245, 25, 245, 0.7)); /* Sombra roxa */
+        }
+
+        @keyframes moveInTriangle {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 2;
+            }
+            33% {
+                transform: translate(calc(50vw - 250px), calc(100vh - 550px)) scale(0.8);
+                opacity: 2.35; /* Brilho maior */
+            }
+            66% {
+                transform: translate(calc(100vw - 550px), 0) scale(1);
+                opacity: 2.5; /* Aumenta o brilho */
+            }
+            100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 2; /* Retorna ao normal */
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="login.html">
+    <img src="VERSATTO_ERP-.png" alt="Logo Versatto ERP" class="logo">
+    </a>
+</body>
+</html>

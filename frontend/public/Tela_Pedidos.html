@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos</title>
+    <link rel="stylesheet" href="assets/css/Tela_Pedidos.css">
+    <link rel="stylesheet" href="assets/css/HeaderFooter.css">
+</head>
+<body>
+    <main class="page">
+        <div id="sidebar-container" class="sidebar">
+                    <button class="closebtn" onclick="toggleSidebar()">×</button>
+                </div>
+                <header class="header">
+                <button class="openbtn" onclick="toggleSidebar()">☰</button>
+                    <h4>Lançamento de Pedido</h4>          
+                    <img 
+                        src="7124045_logout_icon.svg" 
+                        alt="Logout" 
+                        id="logout-icon" 
+                        onclick="window.location.href='login.html'" 
+                        style="cursor: pointer; width: 30px; height: 30px;">
+                </header>
+        
+       <div class="content">
+    <div class="main">                
+        <div class="forms">
+            <button class="button_ped" id="select-client-btn">Selecionar Cliente</button>
+            <input type="text" placeholder="Cliente">
+            <label></label>
+        </div><br>
+        <div>
+            <h4>Nrº Pedido: #00001</h4><br>
+            <h2>Produtos</h2>
+            <button class="button_ped" id="add-product-btn">Incluir Produto</button>
+            <button class="button_ped" id="remove-product-btn">Excluir Produto</button>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Descrição do produto</th>
+                            <th>Qntd</th>
+                            <th>Valor Unitário</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Produto A</td>
+                            <td>10</td>
+                            <td>R$ 15,00</td>
+                            <td>R$ 150,00</td>
+                        </tr>
+                        <tr>
+                            <td>Produto B</td>
+                            <td>5</td>
+                            <td>R$ 25,00</td>
+                            <td>R$ 125,00</td>
+                        </tr>
+                        <tr>
+                            <td>Produto C</td>
+                            <td>8</td>
+                            <td>R$ 30,00</td>
+                            <td>R$ 240,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+        
+        <div class="pagamento">
+            <br>
+            Forma de pagamento:
+            <select>
+                <option value="" disabled selected>Selecione uma opção</option>
+                <option value="pix">Pix</option>
+                <option value="boleto">Boleto Bancário</option>
+                <option value="cartao">Cartão de Crédito</option>
+                <option value="dinheiro">Dinheiro</option>
+                <option value="prazo">A Prazo</option>
+            </select><br>
+
+            <h2>Total do Pedido: R$ 515,00</h2>
+            <button class="add" type="submit" href="Home.html" onclick="window.history.back()">Confirmar Pedido</button>
+            <button class="return" type="button" href="listaPedidos.html" onclick="window.history.back()">Cancelar Pedido</button>
+        </div>
+     </div>  
+    </div>
+    <div id="client-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-client-modal">&times;</span>
+            <h2>Selecionar Cliente</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Telefone</th>
+                        <th>Endereço</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>João Silva</td>
+                        <td>(11) 91234-5678</td>
+                        <td>Rua das Flores, 123 - São Paulo</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Ana Costa</td>
+                        <td>(21) 99876-5432</td>
+                        <td>Avenida Brasil, 456 - Rio de Janeiro</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Carlos Souza</td>
+                        <td>(31) 98765-4321</td>
+                        <td>Rua das Palmeiras, 789 - Belo Horizonte</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Maria Oliveira</td>
+                        <td>(41) 99654-3210</td>
+                        <td>Rua dos Girassóis, 101 - Curitiba</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>        
+    </div>
+
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-product-modal">&times;</span>
+            <h2>Incluir Produtos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Descrição do produto</th>
+                        <th>Qntd</th>
+                        <th>Valor Unitário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Produto A</td>
+                        <td>1</td>
+                        <td>R$ 15,00</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Produto B</td>
+                        <td>1</td>
+                        <td>R$ 25,00</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Produto C</td>
+                        <td>1</td>
+                        <td>R$ 30,00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div id="delProductModal" class="modal">
+        <div class="modal-content">
+
+            <span class="close" id="close-del-product-modal">&times;</span>
+            <h2>Excluir Produtos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Descrição do produto</th>
+                        <th>Qntd</th>
+                        <th>Valor Unitário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Produto A</td>
+                        <td>1</td>
+                        <td>R$ 15,00</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Produto B</td>
+                        <td>1</td>
+                        <td>R$ 25,00</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Produto C</td>
+                        <td>1</td>
+                        <td>R$ 30,00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</main>
+    <script src="Tela_Pedidos.json"></script>
+    <script src="assets/js/scrip.js"></script> 
+</body>
+<div id="footer-container"></div>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo ao Versatto - Login</title>
+    <link rel="stylesheet" href="assets/css/login.css">
+</head>
+<body class="backgrond">
+
+    <div class="container">
+        <form action="Home.html">
+            <h1>Versatto-ERP</h1>
+            <h2>Acesso ao Sistema</h2>
+            <div class="input-container">
+                <input placeholder="Usuário" type="text" name="usuario" required>
+                <img src="https://img.icons8.com/ios/30/user--v1.png" alt="Usuário" class="icon">
+            </div>
+            <div class="input-container">
+                <input placeholder="Senha" type="password" name="senha" required>
+                <img src="https://img.icons8.com/ios/30/lock--v1.png" alt="Senha" class="icon">
+            </div>
+            <div class="input-container">
+                <input id="cpf" placeholder="CPF" name="cpf" required> 
+            </div>
+            <button type="submit" class="submit-button">Entrar</button>
+            <br>
+        </form>
+
+        <form action="Descanso.html">
+            <button type="submit" class="submit-button">Bloquear</button>
+        </form>
+
+    </div>
+    <script>
+        function formatCPF(value) {
+            return value
+                .replace(/\D/g, '')
+                .replace(/^(\d{3})(\d)/, '$1.$2')
+                .replace(/^(\d{3}).(\d{3})(\d)/, '$1.$2.$3')
+                .replace(/.(\d{3})(\d)/, '.$1-$2')
+                .substring(0, 14);
+        }
+
+        const cpfInput = document.getElementById('cpf');
+        cpfInput.addEventListener('input', (e) => {
+            e.target.value = formatCPF(e.target.value);
+        });
+    </script>
+</body>
+</html>

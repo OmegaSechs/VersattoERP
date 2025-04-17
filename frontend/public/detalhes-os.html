@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes da Ordem</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .inline-group {
+            display: flex;
+            align-items: center;
+        }
+        .inline-group label, .inline-group input {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body class="ordens-servico">
+    <header>
+        <h1>Detalhes da Ordem de Serviço</h1>
+    </header>
+    <div id="detalhesOS"> <!-- Adicionado o elemento detalhesOS -->
+    <form id="detalhesOSForm" onsubmit="atualizarOS(event)">
+        <input type="hidden" id="osId">
+        <label for="cliente">Cliente:</label>
+        <input type="text" id="cliente" name="cliente" required><br>
+        <div class="inline-group">
+            <label for="veiculo">Veículo:</label>
+            <input type="text" id="veiculo" name="veiculo" required>
+            <label for="placa">Placa:</label>
+            <input type="text" id="placa" name="placa" required>
+        </div><br>
+        <div class="inline-group">
+            <label for="dataEntrada">Data Entrada:</label>
+            <input type="date" id="dataEntrada" name="dataEntrada" required>
+            <label for="dataSaida">Data Saída:</label>
+            <input type="date" id="dataSaida" name="dataSaida">
+        </div><br>
+        <div class="inline-group">
+            <label for="horaEntrada">Hora Entrada:</label>
+            <input type="time" id="horaEntrada" name="horaEntrada" required>
+            <label for="horaSaida">Hora Saída:</label>
+            <input type="time" id="horaSaida" name="horaSaida">
+        </div><br>
+        <label for="tipo">Tipo:</label>
+        <input type="text" id="tipo" name="tipo" required><br>
+        <button type="submit">Atualizar</button>
+        <button onclick="voltar()">Voltar</button>
+    </form>
+    </div>
+    <script src="detalhes-os.js"></script>
+</body>
+</html>

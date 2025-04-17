@@ -1,0 +1,266 @@
+* {
+    font-family: Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    background-color: #2d3e5091;
+    color: #2D3E50;
+}
+.page {
+    display: grid;
+    grid-template-areas: 
+    "header header"
+    "content content"
+    "footer footer";
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr; 
+    min-height: 100vh;
+    justify-items: center;  
+    align-items: center;    
+}
+
+.button_entrada {
+    background-color: #c78111;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button_entrada:hover {
+    background-color: #a56b0f;
+}
+
+.header {
+    grid-area: header;
+    background: #2D3E50;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px 20px; 
+    color: white;
+}
+
+.openbtn {
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #2D3E50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    transition: transform 0.2s ease-in-out, opacity 0.2s ease;
+}
+
+.openbtn:hover {
+    background-color: #1B2A38;
+    transform: scale(1.05);
+}
+
+.sidebar {
+    height: 100vh;
+    width: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #34495E;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    z-index: 1000;
+}
+
+.sidebar a {
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    color: white;
+    display: block;
+    transition: background-color 0.3s;
+    margin-top: 15px;
+}
+
+.sidebar a:hover {
+    background-color: #c78111; 
+}
+
+.closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+
+    background: none;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 6px;
+}
+
+.content{
+    grid-area: content;
+    background-color: whitesmoke;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    width: 85%; 
+    max-width: 1200px; 
+}
+.input-group {
+    position: relative;
+    margin: 20px;
+}
+label {
+    position: absolute;
+    top: 6px;
+    left: 10px;
+    transition: 0.6s;
+    font-size: 14px;
+    color: black;
+    padding: 5px;
+    border-radius: 5px; 
+}
+
+.w70 input {
+ width: 81.5%;
+}
+
+
+input {
+    width: 98%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    color: black;
+    font-size: 16px;
+}
+
+input:focus + label,
+input:not(:placeholder-shown) + label {
+    top: -20px;
+    left: 10px;
+    font-size: 12px;
+    color: #333;
+}
+
+input:focus {
+    border-color: #4CAF50;
+}
+
+#stock{
+    width: 100%;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 20px;
+    border: solid #000000;
+    word-wrap: break-word; 
+    border-width: 3px;
+    border-radius: 10px;    
+}
+
+#stock thead {
+    background-color: rgb(35, 177, 54);
+    color: rgb(250, 240, 240);
+}
+
+#stock tbody {
+    background-color: rgba(255, 255, 255, 0.32);
+}
+
+.content button.add, button.return {
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    background-color: rgb(13, 173, 13);
+    color: whitesmoke;
+    cursor: pointer;
+    font-size: 16px;
+}
+.content button.add {
+    background-color: rgb(13, 173, 13);
+}
+.content button.add:hover {
+    background-color: darkgreen;
+}
+.content button.return {
+    background-color: red;
+}
+.content button.return:hover {
+    background-color: #8B0000;
+}
+
+.w50, w51{
+    width: 50%;
+    float: left;
+    padding-right: 15px;
+}
+
+.w51{
+    width: 50%;
+    float: left;
+    padding-right: 15px;
+    
+}
+
+.form-box{
+    background-color: white;
+    backdrop-filter: blur(40px);
+    padding: 30px 40px;
+    width: 150%;
+    border-radius: 0 20px 20px 0;
+}
+.form-box h2{
+    font-size: 30px;
+}
+.form-box p{
+    font-weight: bold;
+    color: #3D3D3D;
+}
+.form-box p a{
+    color: #8c00;
+    text-decoration: none;
+}
+.form-box form{
+    margin: 20px 0;
+}
+form .input-group{
+    margin-bottom: 15px;
+}
+form .input-group label{
+    color: #3D3D3D;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+form .input-group input {
+    width: 100%;
+    height: 47px;
+    background-color: rgba(255, 255, 255, 0.32);
+    border-radius: 20px;
+    outline: none;
+    border: 1px solid #616161; 
+    padding: 15px;
+    font-size: 15px;
+    color: #616161;
+    transition: all 0.4s ease;
+}
+
+form .input-group input:focus {
+    border-color: #616161; 
+}
+input, label {
+
+    z-index: 10;
+}
+

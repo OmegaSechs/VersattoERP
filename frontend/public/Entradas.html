@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entradas</title>
+    <link rel="stylesheet" href="assets/css/Entradas.css">
+</head>
+<body>
+    <div id="sidebar-container" class="sidebar">
+        <button class="closebtn" onclick="toggleSidebar()">×</button>
+    </div>
+    <header class="header">
+        <button class="openbtn" onclick="toggleSidebar()">☰</button>
+        <h4>Entradas</h4>
+        <img 
+            src="7124045_logout_icon.svg" 
+            alt="Logout" 
+            id="logout-icon" 
+            onclick="window.location.href='login.html'" 
+            style="cursor: pointer; width: 30px; height: 30px;">
+    </header>
+
+    <main class="page">
+        <div class="content">        
+            <h1>Entrada de Produtos</h1><br>
+
+            <div class="input-group w70">
+                <input type="text" id="fornecedor" placeholder=" ">
+                <label for="fornecedor">Fornecedor</label> 
+                <button class="button_entrada" id="select-fornecedor-btn">Selecionar Fornecedor</button>  
+            </div>
+
+            <div class="input-group">
+                <input type="number" id="codigo_produto" placeholder=" " required>
+                <label for="codigo_produto">Código do Produto</label>
+            </div>        
+
+            <div class="input-group">
+                <input type="text" id="descricao" placeholder=" ">
+                <label for="descricao">Descrição</label>
+            </div>
+
+            <div class="input-group">
+                <input type="number" id="preco_custo" placeholder=" " required>
+                <label for="preco_custo">Preço de Custo</label>
+            </div>
+
+            <div class="input-group">
+                <input type="number" id="preco_venda" placeholder=" " required>
+                <label for="preco_venda">Preço de Venda</label>
+            </div>
+
+            <div class="input-group">
+                <input type="number" id="quantidade" placeholder=" " required>
+                <label for="quantidade">Quantidade</label>
+            </div>
+
+            <button class="add" type="submit" onclick="window.location.href='Entradas.html'">Confirmar entrada</button>
+            <button class="return" type="button" onclick="window.location.href='Home.html'">Retornar</button>
+        </div>
+    </main>
+    <script src="assets/js/scrip.js"></script>
+</body>
+<div id="footer-container"></div>
+</html>

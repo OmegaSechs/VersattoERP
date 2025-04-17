@@ -1,0 +1,1 @@
+jdbc:firebirdsql://localhost:3060/D:\Eng. de Software\Banco de dados\NOVOBANCO.FDB

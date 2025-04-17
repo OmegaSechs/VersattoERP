@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap');
+* {
+    font-family: Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    background-color: #2d3e5091;
+    color: #2D3E50;
+}
+
+.page {
+    display: grid;
+    grid-template-areas: 
+    "header header"
+    "content content"
+    "footer footer";
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr; 
+    min-height: 100vh;
+    justify-items: center;  
+    align-items: center;    
+}
+
+.content {
+    grid-area: content;
+    background-color: whitesmoke;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    width: 85%; 
+    max-width: 1200px; 
+}
+
+.form-content h2 {
+    font-size: 30px;
+}
+
+.form-content p {
+    font-weight: bold;
+    color: #3D3D3D;
+}
+
+.form-content p a {
+    color: #8c00;
+    text-decoration: none;
+}
+
+.form-content form {
+    margin: 20px 0;
+}
+
+form .input-group {
+    margin-bottom: 15px;
+}
+
+form .input-group label {
+    color: #3D3D3D;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+form .input-group input {
+    width: 100%;
+    height: 47px;
+    background-color: rgba(255, 255, 255, 0.32);
+    border-radius: 20px;
+    outline: none;
+    border: 1px solid #616161; 
+    padding: 15px;
+    font-size: 15px;
+    color: #616161;
+    transition: all 0.4s ease;
+}
+
+form .input-group input:focus {
+    border-color: #616161; 
+}
+
+form button {
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    background-color: rgb(13, 173, 13);
+    color: whitesmoke;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+form button.add:hover {
+    background-color: darkgreen;
+}
+
+form button.return {
+    background-color: red; 
+}
+form button.return:hover {
+    background-color: #8B0000;
+}
+
+form .input-group label {
+    font-size: 14px;
+}
+
+form .input-group input[type="checkbox"] {
+    width: 24px; 
+    height: 24px;
+    border-radius: 50%; 
+    background-color: #f0f0f0;
+    border: 2px solid #8c0f;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    vertical-align: middle; /* Alinha verticalmente os checkboxes */
+}
+
+form .input-group input[type="checkbox"]:checked {
+    background-color: #8c0f; 
+    transform: scale(1.2); 
+}
+
+form .input-group input[type="checkbox"]:checked + label {
+    color: #8cff; 
+}
+
+form .input-group input[type="checkbox"]:not(:checked) {
+    background-color: #f0f0f0; 
+}
+
+form .input-group input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: 0 0 5px #c78111;
+}
+
+form .input-group.checkboxes {
+    display: flex; /* Usa flexbox para o alinhamento */
+    flex-wrap: wrap; /* Permite quebra de linha se necessário */
+    gap: 10px; /* Espaçamento entre os checkboxes */
+    width: 100%; 
+    justify-content: flex-start; /* Alinha os checkboxes à esquerda */
+}
+
+form .checkbox-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.w50 {
+    width: 50%;
+    float: left;
+    padding-right: 15px;
+}
+
+.w51 {
+    width: 50%;
+    float: left;
+    padding-right: 15px;
+}

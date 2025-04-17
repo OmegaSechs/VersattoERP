@@ -1,0 +1,59 @@
+var clientModal = document.getElementById("client-modal");
+var productModal = document.getElementById("product-modal");
+var delProductModal = document.getElementById("delProductModal"); 
+
+var selectClientBtn = document.getElementById("select-client-btn");
+var addProductBtn = document.getElementById("add-product-btn");
+var removeProductBtn = document.getElementById("remove-product-btn");
+
+var closeClientModal = document.getElementById("close-client-modal");
+var closeProductModal = document.getElementById("close-product-modal");
+var closeDelProductModal = document.getElementById("close-del-product-modal"); 
+
+
+function openModal(modal) {
+    modal.style.display = "block";
+}
+
+function closeModal(modal) {
+    modal.style.display = "none";
+}
+
+
+selectClientBtn.onclick = function() {
+    openModal(clientModal);
+}
+
+addProductBtn.onclick = function() {
+    openModal(productModal);
+}
+
+removeProductBtn.onclick = function() {
+    openModal(delProductModal);
+}
+
+
+closeClientModal.onclick = function() {
+    closeModal(clientModal);
+}
+
+closeProductModal.onclick = function() {
+    closeModal(productModal);
+}
+
+closeDelProductModal.onclick = function() {
+    closeModal(delProductModal);
+}
+
+
+window.onclick = function(event) {
+    if (event.target == clientModal) {
+        closeModal(clientModal);
+    }
+    if (event.target == productModal) {
+        closeModal(productModal);
+    }
+    if (event.target == delProductModal) {
+        closeModal(delProductModal);
+    }
+}

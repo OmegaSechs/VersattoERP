@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Versatto ERP</title>
+    <link rel="stylesheet" href="assets/css/Home.css">
+    <link rel="stylesheet" href="assets/css/HeaderFooter.css">
+</head>
+<body class="background">
+    <main class="page">
+        
+        <div id="sidebar-container" class="sidebar">
+            <button class="closebtn" onclick="toggleSidebar()">×</button>
+        </div>
+
+        <header class="header">
+            <button class="openbtn" onclick="toggleSidebar()">☰</button>
+            <h4>Dashboards</h4>
+      
+            <img 
+                src="7124045_logout_icon.svg" 
+                alt="Logout" 
+                id="logout-icon" 
+                onclick="window.location.href='login.html'" 
+                style="cursor: pointer; width: 30px; height: 30px;">
+        </header>
+        
+        <style>
+            
+        </style>
+        
+
+        <div class="content">
+            <article>
+                <h1>Nome da Sua Empresa</h1>
+                <p>Slogan da Sua Empresa</p>
+                <br><br>
+            </article>
+
+            <div class="graficos">
+                <div class="pizza-1">
+                    <h1>Grafico 1</h1>
+                    <div class="grafico-1"></div>
+                    <div class="legenda-1">
+                        <div><span class="verde"></span>Categoria A</div>
+                        <div><span class="amarelo"></span>Categoria B</div>
+                        <div><span class="vermelho"></span>Categoria C</div>
+                    </div>
+                </div>
+                <div class="pizza-2">
+                    <h1>Grafico 2</h1>
+                    <div class="grafico-2"></div>
+                    <div class="legenda-2">
+                        <div><span class="verde"></span>Categoria A</div>
+                        <div><span class="amarelo"></span>Categoria B</div>
+                        <div><span class="vermelho"></span>Categoria C</div>
+                    </div>
+                </div>
+                <div class="pizza-3">
+                    <h1>Grafico 3</h1>
+                    <div class="grafico-3"></div>
+                    <div class="legenda-3">
+                        <div><span class="verde"></span>Categoria A</div>
+                        <div><span class="amarelo"></span>Categoria B</div>
+                        <div><span class="vermelho"></span>Categoria C</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br><br>
+        
+    </main>
+    <script src="assets/js/scrip.js"></script>  
+</body>
+<div id="footer-container"></div>
+</html>

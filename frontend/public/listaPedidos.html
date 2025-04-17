@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos</title>
+    <link href="assets/css/Lista.css" rel="stylesheet">
+    <link href="assets/css/HeaderFooter.css" rel="stylesheet">
+
+</head>
+<body>  
+    </div>
+
+    <main class="page">
+        <div id="sidebar-container" class="sidebar">
+                    <button class="closebtn" onclick="toggleSidebar()">×</button>
+                </div>
+                <header class="header">
+                <button class="openbtn" onclick="toggleSidebar()">☰</button>
+                    <h4>Pedidos Lançados</h4>          
+                    <img 
+                        src="7124045_logout_icon.svg" 
+                        alt="Logout" 
+                        id="logout-icon" 
+                        onclick="window.location.href='login.html'" 
+                        style="cursor: pointer; width: 30px; height: 30px;">
+                </header>
+        
+
+<div class="container">
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Pesquisar Pessoa..." onkeyup="searchTables()">
+        <button class="search-btn" onclick="searchTable()">Pesquisar</button>
+    </div>
+    <button type="button" class="add" onclick="window.location.href='Tela_Pedidos.html'">Cadastrar</button>
+    <button type="button" class="return" onclick="window.location.href='Home.html'">Retornar</button>
+
+    <div class="table-container">
+        <table id="searchTable">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nome Do Cliente</th>
+                    <th>Endereço</th>
+                    <th>Valor Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>João da Silva</td>
+                    <td>Rua das Flores, 123 - São Paulo, SP</td>
+                    <td>R$ 1.245,50</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Maria Oliveira</td>
+                    <td>Avenida Brasil, 456 - Rio de Janeiro, RJ</td>
+                    <td>R$ 3.742,30</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Pedro Santos</td>
+                    <td>Rua Boa Vista, 789 - Belo Horizonte, MG</td>
+                    <td>R$ 589,00</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Ana Paula Lima</td>
+                    <td>Travessa das Palmeiras, 234 - Curitiba, PR</td>
+                    <td>R$ 982,20</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Carlos Eduardo</td>
+                    <td>Estrada do Campo, 567 - Porto Alegre, RS</td>
+                    <td>R$ 2.315,75</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+</main>
+<script src="scrip.js"></script> 
+</body>
+<div id="footer-container"></div>
+</html>

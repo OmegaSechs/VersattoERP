@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Estoque de Produtos</title>
+    <link rel="stylesheet" href="assets/css/Lista.css">
+    <link rel="stylesheet" href="assets/css/HeaderFooter.css">
+</head>
+
+<body class="background">
+    <main class="page">
+        <div id="sidebar-container" class="sidebar">
+            <button class="closebtn" onclick="toggleSidebar()">×</button>
+        </div>
+    <header class="header">
+        <button class="openbtn" onclick="toggleSidebar()">☰</button>
+        <h4>Produtos Cadastrados</h4>
+        <img 
+            src="7124045_logout_icon.svg" 
+            alt="Logout" 
+            id="logout-icon" 
+            onclick="window.location.href='login.html'" 
+            style="cursor: pointer; width: 30px; height: 30px;">
+    </header>
+
+
+    <div class="container">
+
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Pesquisar Produto..." onkeyup="searchTables()">
+            <button class="search-btn" onclick="searchTable()">Pesquisar</button>
+        </div>
+        <button type="button" class="add" onclick="window.location.href='CadastroProdutos.html'">Cadastrar</button>
+        <button type="button" class="return" onclick="window.location.href='Home.html'">Retornar</button>
+
+
+        <div class="table-container">
+            <h2>Lista de Produtos</h2>
+            <table id="searchTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Quantidade Mínima</th>
+                        <th>Quantidade Máxima</th>
+                        <th>Estoque Disponível</th>
+                        <th>Custo</th>
+                        <th>Venda</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Produto A</td>
+                        <td>10</td>
+                        <td>50</td>
+                        <td>25</td>
+                        <td>20,00</td>
+                        <td>30,00</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Produto B</td>
+                        <td>5</td>
+                        <td>30</td>
+                        <td>15</td>
+                        <td>15,00</td>
+                        <td>25,00</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Produto C</td>
+                        <td>20</td>
+                        <td>100</td>
+                        <td>80</td>
+                        <td>10,00</td>
+                        <td>18,00</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Produto D</td>
+                        <td>15</td>
+                        <td>60</td>
+                        <td>40</td>
+                        <td>12,00</td>
+                        <td>22,00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    </main>
+<script src="assets/js/scrip.js"></script> 
+</body>
+<div id="footer-container"></div>
+</html>
