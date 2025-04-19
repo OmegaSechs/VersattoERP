@@ -12,7 +12,7 @@ class PessoaController {
 
 static async criar(req, res) {
     try {
-        const novaPessoa = await Pessoa.criar(req, body);
+        const novaPessoa = await Pessoa.criar(req.body);
         res.status(201).json(novaPessoa);
     } catch (err) {
         res.status(500).json({ error: 'Erro ao criar pessoa: ' + err.message });
