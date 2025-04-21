@@ -80,24 +80,31 @@
                     <input type="Celular" id="Celular" placeholder="Celular" required>
                 </div> 
             
-            <div class="input-group checkboxes">
-                <div class="checkbox-item">
-                    <label><input type="checkbox" id="termos">Pessoa Física</label>
+                <div class="input-group checkboxes">
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="termos">Pessoa Física</label>
+                    </div>
+                
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="newsletter">Pessoa Jurídica</label>
+                    </div>
+                
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="termos">Cliente</label>           
+                    </div>
+                
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="newsletter">Fornecedor</label>
+                    </div>
+                </div> <!-- ← fecha aqui a div de checkboxes -->
+                
+                <!-- Agora sim, os botões ficam fora e livres para centralizar -->
+                <div class="button-group">
+                    <button class="add" type="submit" onclick="window.history.back()">Cadastrar</button>
+                    <button class="return" type="button" onclick="window.history.back()">Cancelar Cadastro</button>
                 </div>
-
-                <div class="checkbox-item">
-                    <label><input type="checkbox" id="newsletter">Pessoa Jurídica</label>
-                </div>
-
-                <div class="checkbox-item">
-                    <label><input type="checkbox" id="termos">Cliente</label>           
-                </div>
-
-                <div class="checkbox-item">
-                    <label><input type="checkbox" id="newsletter">Fornecedor</label>
-                </div>
-                    <button class="add" type="submit" href="Home.html" onclick="window.history.back()">Cadastrar</button>
-                    <button class="return" type="button" href="listaPessoas.html" onclick="window.history.back()">Cancelar Cadastro</button>        
+                
+                  
             </div>
 
          
