@@ -176,29 +176,82 @@ input:focus {
     background-color: rgba(255, 255, 255, 0.32);
 }
 
-.content button.add, button.return {
-    margin-top: 10px;
-    padding: 10px;
+form button {
+    
+    --text-color: #fff;
+    position: relative;
     width: 100%;
-    border-radius: 5px;
     border: none;
-    background-color: rgb(13, 173, 13);
-    color: whitesmoke;
-    cursor: pointer;
+    background: var(--bg);
+    color: var(--text-color);
+    padding: 1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.2s;
+    border-radius: 5px;
+    opacity: 0.8;
+    letter-spacing: 1px;
+   
     font-size: 16px;
+    cursor: pointer;
+    width: 200px; /* ← Deixa o botão ter o tamanho do conteúdo */
+    padding: 1em 2em; /* opcional: aumenta o espaçamento interno */
+    
 }
-.content button.add {
-    background-color: rgb(13, 173, 13);
+
+.button-group {
+    display: flex;
+    flex-direction: column;     /* Empilha os botões */
+    gap: 15px;                  /* Espaço entre eles */
+    align-items: flex-end;      /* Alinha à direita */
+    width: 100%;                /* Faz o container ocupar toda a largura */
+    margin-top: 20px;
+    
+  }.button-group button {
+    
+    padding: 6px 1px; /* Menor espaçamento interno */
+    font-size: 14px;   /* Tamanho de fonte menor */
+    width: 200px; /* ← largura fixa */
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.9;
+    transition: all 0.2s ease;
+    box-shadow: 0px 6px 2px rgba(0,0,0,0.2), 0px 7px 4px rgba(0,0,0,0.3);
+  }
+  button.add {
+    background-color: #4988fc;
+    box-shadow: #2366e4 0px 7px 2px, #460000 0px 8px 5px;
+    border: none;
+    color: white;
+ ; }
+
+  button.return {
+    border: none;
+    color: white;
+    background-color: #e74c3c;
+    box-shadow: #c0392b 0px 7px 2px, #000 0px 8px 5px;
+  }
+
+form button:hover {
+    opacity: 1;
 }
-.content button.add:hover {
-    background-color: darkgreen;
+
+button.add:active {
+    top: 4px;
+    box-shadow: #2366e4 0px 3px 2px, #000 0px 3px 5px;
+    position: relative
+    
 }
-.content button.return {
-    background-color: red;
+
+button.return:active {
+    top: 4px;
+    box-shadow: #c0392b 0px 3px 2px, #000 0px 3px 5px;
+    position: relative
 }
-.content button.return:hover {
-    background-color: #8B0000;
-}
+
+
 
 .w50, w51{
     width: 50%;
