@@ -80,23 +80,12 @@
                     <input type="Celular" id="Celular" placeholder="Celular" required>
                 </div> 
             
-                <div class="input-group checkboxes">
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" id="termos">Pessoa Física</label>
-                    </div>
-                
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" id="newsletter">Pessoa Jurídica</label>
-                    </div>
-                
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" id="termos">Cliente</label>           
-                    </div>
-                
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" id="newsletter">Fornecedor</label>
-                    </div>
-                </div> <!-- ← fecha aqui a div de checkboxes -->
+                <select class="select-pessoa">
+                        <option value="Pessoa Física">Pessoa Física</option>
+                        <option value="Pessoa Jurídica">Pessoa Jurídica</option>
+                        <option value="Cliente">Cliente</option>
+                        <option value="Fornecedor">Fornecedor</option>
+                </select>
                 
                 <!-- Agora sim, os botões ficam fora e livres para centralizar -->
                 <div class="button-group">
@@ -112,7 +101,7 @@
         </div>
     </div>
     </main>
-    <script src="assets/js/scrip.js"></script>
+    <script src="assets/js/script.js"></script>
     <div id="footer-container"></div>
 </body>
 </html>
