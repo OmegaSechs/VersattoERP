@@ -57,22 +57,7 @@
     border-radius: 5px;
 }
 
-.search-container button {
-    padding: 6px 1px;
-    font-size: 14px;
-    min-width: 120px;
-    border-radius: 5px;
-    text-transform: uppercase;
-    font-weight: bold;
-    cursor: pointer;
-    opacity: 0.9;
-    transition: all 0.2s ease;
-    box-shadow: 0px 6px 2px rgba(0,0,0,0.2), 0px 7px 4px rgba(0,0,0,0.3);
-    background-color: #81C784;  /* Verde suave */
-    color: white;
-    box-shadow: #66BB6A 0px 7px 2px, #460000 0px 8px 5px;
-    border: none; /* REMOVE borda padrão */
-}
+
 
 .search-container button:hover {
     opacity: 1;
@@ -117,7 +102,7 @@
 
 button.add, button.return {
     padding: 6px 1px;
-    font-size: 14px;
+    font-size: 14px;n
     min-width: 120px;
     border-radius: 5px;
     text-transform: uppercase;
@@ -128,12 +113,61 @@ button.add, button.return {
     box-shadow: 0px 6px 2px rgba(0,0,0,0.2), 0px 7px 4px rgba(0,0,0,0.3);
 }
 
-/* Estilo específico para cada cor */
-button.add {
-    background-color: #4988fc;
-    color: white;
-    box-shadow: #2366e4 0px 7px 2px, #460000 0px 8px 5px;
-    border: none; /* REMOVE borda padrão */
+
+
+
+ button.add {
+    background-color: #000000;   /* Fundo preto */
+    color: #fff;              /* Texto branco */
+
+    border: 0.125em solid #1A1A1A;
+    border-radius: 0.9375em;
+    box-sizing: border-box;
+    color: #fdfdfd;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    min-height: 3.75em;
+    min-width: 0;
+    outline: none;
+    padding: 1em 2.3em;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
+      box-shadow: none !important;
+}
+
+button.add,
+button.search {
+    width: 200px !important;
+    min-width: 200px !important;
+    max-width: 200px !important;
+    padding: 1em 0 !important; /* padding lateral reduzido para caber melhor */
+    text-align: center;
+}
+
+button.add:disabled {
+    pointer-events: none;
+}
+
+button.add:hover {
+    color: #636363;
+    background-color: #ffffff;   /* ← pode ser preto ou um tom mais claro */
+   
+    transform: translateY(-2px);
+}
+
+button.add:active {
+     
+    transform: translateY(0);
 }
 
 button.return {
@@ -144,7 +178,7 @@ button.return {
 }
 
 button.add:hover {
-    background-color: #3c68fa;  /* Hover mais forte no verde para o "Cadastrar" */
+    background-color: #ffffff;  /* Hover mais forte no verde para o "Cadastrar" */
 }
 button.return:hover {
     background-color: #c0392b;  /* Hover para o vermelho mais forte no "Retornar" */
@@ -168,6 +202,43 @@ button.return:active {
 .action-buttons button {
     width: auto;
     min-width: 120px;
+}
+
+button.search {
+    background-color: transparent; /* Azul para diferenciar */
+    color: #3B3B3B;
+    border: 0.125em solid #000000;
+    border-radius: 0.9375em;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    min-height: 3.75em;
+    min-width: 0;
+    outline: none;
+    padding: 1em 2.3em;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
+}
+
+button.search:hover {
+    background-color: #000000;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+button.search:active {
+    transform: translateY(0);
+    box-shadow: none;
 }
 
 

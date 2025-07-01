@@ -9,7 +9,7 @@
 body {
     font-family: 'Arial', sans-serif;
     min-height: 100vh;
-    background-color: #2d3e5091;
+    background-color: #979ea7;
     color: #2D3E50;
 }
 
@@ -83,7 +83,6 @@ form .input-group input:focus {
 }
 
 form button {
-    
     --text-color: #fff;
     position: relative;
     width: 100%;
@@ -97,24 +96,22 @@ form button {
     border-radius: 5px;
     opacity: 0.8;
     letter-spacing: 1px;
-   
     font-size: 16px;
     cursor: pointer;
     width: 200px; /* ← Deixa o botão ter o tamanho do conteúdo */
     padding: 1em 2em; /* opcional: aumenta o espaçamento interno */
-    
 }
 
 .button-group {
     display: flex;
-    flex-direction: column;     /* Empilha os botões */
-    gap: 15px;                  /* Espaço entre eles */
-    align-items: flex-end;      /* Alinha à direita */
-    width: 100%;                /* Faz o container ocupar toda a largura */
+    flex-direction: column; /* Empilha os botões */
+    gap: 15px;              /* Espaço entre eles */
+    align-items: center; /* Alinha à esquerda */
+    width: 100%;            /* Faz o container ocupar toda a largura */
     margin-top: 20px;
-    
-  }.button-group button {
-    
+}
+
+.button-group button {
     padding: 6px 1px; /* Menor espaçamento interno */
     font-size: 14px;   /* Tamanho de fonte menor */
     min-width: 120px;  /* Largura mínima para os botões */
@@ -124,64 +121,94 @@ form button {
     cursor: pointer;
     opacity: 0.9;
     transition: all 0.2s ease;
-    box-shadow: 0px 6px 2px rgba(0,0,0,0.2), 0px 7px 4px rgba(0,0,0,0.3);
-  }
-  button.add {
-    background-color: #4988fc;
-    box-shadow: #2366e4 0px 7px 2px, #460000 0px 8px 5px;
- ; }
+}
 
-  button.return {
+button.add {
+    background-color: #000000;   /* Fundo preto */
+    color: #fff;                 /* Texto branco */
+    border: 0.125em solid #1A1A1A;
+    border-radius: 0.9375em;
+    box-sizing: border-box;
+    color: #fdfdfd;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    min-height: 3.75em;
+    min-width: 0;
+    outline: none;
+    padding: 1em 2.3em;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
+}
+
+button.add:disabled {
+    pointer-events: none;
+}
+
+button.add:hover {
+    color: #636363;
+    background-color: #ffffff;   /* ← pode ser preto ou um tom mais claro */
+    transform: translateY(-2px);
+}
+
+button.add:active {
+    transform: translateY(0);
+}
+
+button.return {
     background-color: #e74c3c;
     box-shadow: #c0392b 0px 7px 2px, #000 0px 8px 5px;
-   
-  }
+}
 
 form button:hover {
     opacity: 1;
 }
 
-button.add:active {
+form button:active {
     top: 4px;
-    box-shadow: #2366e4 0px 3px 2px, #000 0px 3px 5px;
-   
-}
-
-button.return:active {
-    top: 4px;
-    box-shadow: #c0392b 0px 3px 2px, #000 0px 3px 5px;
+    box-shadow: #4988fc 0px 3px 2px, #000 0px 3px 5px;
 }
 
 form .input-group label {
     font-size: 14px;
 }
 
-form .input-group input[type="checkbox"] {
-    width: 24px; 
+/* Estilo para checkbox e radio quadrados */
+form .input-group input[type="checkbox"],
+form .input-group input[type="radio"] {
+    width: 24px;
     height: 24px;
-    border-radius: 50%; 
+    border-radius: 0; /* cantos retos, quadrados */
     background-color: #f0f0f0;
     border: 2px solid #8c0f;
     margin-right: 10px;
     cursor: pointer;
     transition: transform 0.3s ease, background-color 0.3s ease;
-    vertical-align: middle; /* Alinha verticalmente os checkboxes */
+    vertical-align: middle;
 }
 
-form .input-group input[type="checkbox"]:checked {
-    background-color: #8c0f; 
-    transform: scale(1.2); 
+form .input-group input[type="checkbox"]:checked,
+form .input-group input[type="radio"]:checked {
+    background-color: #8c0f;
+    transform: scale(1.2);
 }
 
-form .input-group input[type="checkbox"]:checked + label {
-    color: #8cff; 
+form .input-group input[type="checkbox"]:not(:checked),
+form .input-group input[type="radio"]:not(:checked) {
+    background-color: #f0f0f0;
 }
 
-form .input-group input[type="checkbox"]:not(:checked) {
-    background-color: #f0f0f0; 
-}
-
-form .input-group input[type="checkbox"]:focus {
+form .input-group input[type="checkbox"]:focus,
+form .input-group input[type="radio"]:focus {
     outline: none;
     box-shadow: 0 0 5px #c78111;
 }
@@ -210,4 +237,13 @@ form .checkbox-item {
     width: 50%;
     float: left;
     padding-right: 15px;
+}
+
+#camposPJ {
+    display: none; /* começa escondido */
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0; /* ajustável */
+    margin-bottom: 1px;
 }
