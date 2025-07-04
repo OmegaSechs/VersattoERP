@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Estoque de Produtos</title>
-    <link rel="stylesheet" href="assets/css/Lista.css">
-    <link rel="stylesheet" href="assets/css/HeaderFooter.css">
+    <link rel="stylesheet" href="Lista.css">
+    <link rel="stylesheet" href="HeaderFooter.css">
 </head>
 
 <body class="background">
@@ -29,12 +29,8 @@
 
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Pesquisar Produto..." onkeyup="searchTables()">
-            <button class="search-btn" onclick="searchTable()">Pesquisar</button>
+            <button class="search-btn" onclick="window.location.href='CadastroProdutos.html'">Cadastrar</button>
         </div>
-        <div class="action-buttons">
-        <button type="button" class="add" onclick="window.location.href='CadastroProdutos.html'">Cadastrar</button>
-        <button type="button" class="return" onclick="window.location.href='Home.html'">Retornar</button>
-    </div>
 
         <div class="table-container">
             <h2>Lista de Produtos</h2>
@@ -93,7 +89,7 @@
     </div>
     
     </main>
-<script src="assets/js/script.js"></script> 
+<script src="scrip.js"></script> 
 </body>
 <div id="footer-container"></div>
 </html>
