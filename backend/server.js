@@ -1,10 +1,16 @@
 const fastify = require('fastify')({ logger: true });
 const path = require('path');
 
+
 // Registro do plugin de arquivos estáticos
 fastify.register(require('@fastify/static'), {
-  root: path.join(__dirname, 'public'),
+  root: path.join(__dirname, '..', 'frontend', 'public'),
 });
+
+fastify.register(require('@fastify/cors'), {
+  origin: '*'
+});
+
 
 // Registro das rotas separadas
 fastify.register(require('./routes/clientesRoutes'));
