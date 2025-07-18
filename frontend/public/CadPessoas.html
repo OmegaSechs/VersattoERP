@@ -71,19 +71,37 @@
     </div>
 </div>
 
-                    <div class="input-group w50">
-                        <label for="rua">Rua</label>
-                        <input type="text" id="rua" placeholder="Digite a Rua/Avenida" required>
-                    </div> 
+                 <div class="input-group w50">
+    <label for="rua">Rua</label>
+    <input type="text" id="rua" placeholder="Digite a Rua" required>
+</div>
+<div class="input-group w50">
+    <label for="numero">Número</label>
+    <input type="text" id="numero" placeholder="Número da casa" required>
+</div>
+<div class="input-group w50">
+    <label for="complemento">Complemento</label>
+    <input type="text" id="complemento" placeholder="Complemento (opcional)">
+</div>
+<div class="input-group w50">
+    <label for="bairro">Bairro</label>
+    <input type="text" id="bairro" placeholder="Digite o Bairro" required>
+</div>
+
+<div class="input-group w50">
+    <label for="cidade">Cidade</label>
+    <input type="text" id="cidade" placeholder="Digite a Cidade" required>
+</div>
+
+<div class="input-group w50">
+    <label for="estado">Estado</label>
+    <input type="text" id="estado" placeholder="Digite o Estado" required>
+</div>
 
                     <div class="input-group w50">
-                        <label for="bairro">Bairro</label>
-                        <input type="text" id="bairro" placeholder="Digite o Bairro" required>
-                    </div> 
+                       <label for="cep">CEP</label>
+<input type="text" id="cep" placeholder="Digite o cep da sua casa" required>
 
-                    <div class="input-group w50">
-                        <label for="numeroCasa">Número</label>
-                        <input type="text" id="numeroCasa" placeholder="Digite o Número da Casa/Apt" required>
                     </div>
 
                     <div class="input-group w51">
@@ -108,42 +126,10 @@
                         
                 </form>
             </div>
-        </div>
-    </main>
-
     <script src="assets/js/script.js"></script>
-  <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const labelCpfCnpj = document.getElementById("labelCpfCnpj");
-    const inputCpfCnpj = document.getElementById("cpfCnpj");
-    const pessoaFisica = document.getElementById("pessoaFisica");
-    const pessoaJuridica = document.getElementById("pessoaJuridica");
-    const camposPJ = document.getElementById("camposPJ");
-
-    function atualizarCampo() {
-        if (pessoaFisica.checked) {
-            pessoaJuridica.checked = false;
-            labelCpfCnpj.textContent = "CPF";
-            inputCpfCnpj.placeholder = "Digite o CPF";
-            inputCpfCnpj.maxLength = 14;
-            camposPJ.style.display = "none";
-        } else if (pessoaJuridica.checked) {
-            pessoaFisica.checked = false;
-            labelCpfCnpj.textContent = "CNPJ";
-            inputCpfCnpj.placeholder = "Digite o CNPJ";
-            inputCpfCnpj.maxLength = 18;
-            camposPJ.style.display = "flex";
-        } else {
-            // Nenhum marcado
-            labelCpfCnpj.textContent = "CPF/CNPJ";
-            inputCpfCnpj.placeholder = "Digite o CPF ou CNPJ";
-            camposPJ.style.display = "none";
-        }
-    }
-
-    pessoaFisica.addEventListener("change", atualizarCampo);
-    pessoaJuridica.addEventListener("change", atualizarCampo);
-
-    atualizarCampo(); // Executa na carga da página
+    <script src="cadastrarPessoa.js"></script>
+    });
 });
 </script>
+</body>
+</html>
