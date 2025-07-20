@@ -39,16 +39,18 @@ async function catalogoRoutes(fastify, opts) {
       preco_padrao,
       preco_custo,
       unidade_medida,
-      descricao
+      descricao,
+      quantidade_minima,
+      quantidade_maxima
     } = request.body;
 
     try {
       await pool.query(`
         INSERT INTO catalogoitens
-        (nome, tipo, preco_padrao, preco_custo, unidade_medida, descricao, criado_em, atualizado_em)
-        VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+        (nome, tipo, preco_padrao, preco_custo, unidade_medida, descricao, criado_em, atualizado_em, quantidade_minima, quantidade_maxima)
+        VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW(), $7, $8)
       `, [
-        nome, tipo, preco_padrao, preco_custo, unidade_medida, descricao
+        nome, tipo, preco_padrao, preco_custo, unidade_medida, descricao, quantidade_minima, quantidade_maxima
       ]);
       reply.send({ message: 'Item cadastrado no catálogo' });
     } catch (erro) {
@@ -65,7 +67,9 @@ async function catalogoRoutes(fastify, opts) {
       preco_padrao,
       preco_custo,
       unidade_medida,
-      descricao
+      descricao,
+      quantidade_minima,
+      quantidade_maxima
     } = request.body;
 
     try {
@@ -77,10 +81,12 @@ async function catalogoRoutes(fastify, opts) {
           preco_custo = $4,
           unidade_medida = $5,
           descricao = $6,
-          atualizado_em = NOW()
-        WHERE id = $7
+          atualizado_em = NOW(),
+          quantidade_minima = $7,
+          quantidade_maxima = $8
+        WHERE id = $9
       `, [
-        nome, tipo, preco_padrao, preco_custo, unidade_medida, descricao, id
+        nome, tipo, preco_padrao, preco_custo, unidade_medida, descricao, quantidade_minima, quantidade_maxima, id
       ]);
       reply.send({ message: 'Item do catálogo atualizado' });
     } catch (erro) {
