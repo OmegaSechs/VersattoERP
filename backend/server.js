@@ -17,6 +17,7 @@ fastify.register(require('./routes/clientesRoutes'));
 fastify.register(require('./routes/pessoasRoutes'));
 fastify.register(require('./routes/catalogoRoutes'));
 fastify.register(require('./routes/veiculosRoutes'));
+fastify.register(require('./routes/ordensServicoRoutes'));
 // Adicionar outros arquivos de rotas conforme formos fazendo
 
 const start = async () => {
