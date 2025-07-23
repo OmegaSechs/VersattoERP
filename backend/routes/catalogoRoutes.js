@@ -22,7 +22,7 @@ async function catalogoRoutes(fastify, opts) {
       }
 
       const whereSQL = whereClauses.length > 0 ? 'WHERE ' + whereClauses.join(' AND ') : '';
-      const query = `SELECT * FROM catalogoitens ${whereSQL}`;
+      const query = `SELECT * FROM catalogo_itens ${whereSQL}`;
       const { rows } = await pool.query(query, values);
 
       reply.send(rows);
@@ -46,7 +46,7 @@ async function catalogoRoutes(fastify, opts) {
 
     try {
       await pool.query(`
-        INSERT INTO catalogoitens
+        INSERT INTO catalogo_itens
         (nome, tipo, preco_padrao, preco_custo, unidade_medida, descricao, criado_em, atualizado_em, quantidade_minima, quantidade_maxima)
         VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW(), $7, $8)
       `, [
@@ -74,7 +74,7 @@ async function catalogoRoutes(fastify, opts) {
 
     try {
       await pool.query(`
-        UPDATE catalogoitens SET
+        UPDATE catalogo_itens SET
           nome = $1,
           tipo = $2,
           preco_padrao = $3,
@@ -98,7 +98,7 @@ async function catalogoRoutes(fastify, opts) {
   fastify.delete('/catalogo/:id', async (request, reply) => {
     const { id } = request.params;
     try {
-      await pool.query('DELETE FROM catalogoitens WHERE id = $1', [id]);
+      await pool.query('DELETE FROM catalogo_itens WHERE id = $1', [id]);
       reply.send({ message: 'Item removido do catálogo' });
     } catch (erro) {
       reply.code(500).send({ erro: erro.message });
