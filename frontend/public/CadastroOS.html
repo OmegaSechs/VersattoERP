@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de OS/Orçamento</title>
+    <link rel="stylesheet" href="assets/css/CadProdutos.css">
+    <link rel="stylesheet" href="assets/css/HeaderFooter.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        .input-row, .input-row2 {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .input-group.w100 {
+            width: 100%;
+        }
+
+        .input-group.w50 {
+            width: 48%;
+        }
+
+        .input-group label {
+            display: inline-block;
+            width: 180px; /* Estica horizontalmente */
+            min-width: 120px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
+        .input-group input,
+        .input-group select {
+            flex: 1;
+            padding: 10px 8px;
+            font-size: 1rem;
+            margin-bottom: 0;
+            box-sizing: border-box;
+        }
+
+        .selectPecas {
+            margin-bottom: 16px;
+        }
+
+        .item-list {
+            margin-top: 24px;
+        }
+
+        @media (max-width: 700px) {
+            .input-row, .input-row2 {
+                flex-direction: column;
+                gap: 0;
+            }
+            .input-group.w50, .input-group.w100 {
+                width: 100%;
+            }
+            .input-group label {
+                width: 100%;
+                margin-bottom: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar-container" class="sidebar">
+        <button class="closebtn" onclick="toggleSidebar()">×</button>
+    </div>
+    <header class="header">
+        <button class="openbtn" onclick="toggleSidebar()">☰</button>
+        <h4>Ordens de Serviço</h4>
+        <img 
+            src="7124045_logout_icon.svg" 
+            alt="Logout" 
+            id="logout-icon" 
+            onclick="window.location.href='login.html'" 
+            style="cursor: pointer; width: 30px; height: 30px;">
+    </header>
+    <main class="page">
+        <div class="content">
+            <h2>Cadastro de OS/Orçamento</h2>
+            <form id="formOS">
+                <div class="input-row">
+                    <div class="input-group w100">
+                        <input type="text" id="nome" name="nome" placeholder=" " required>
+                        <label for="nome">Nome do Cliente</label>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group w100">
+                        <input type="text" id="endereco" name="endereco" placeholder=" " required>
+                        <label for="endereco">Endereço</label>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group w50">
+                        <input type="text" id="cpf" name="cpf" placeholder=" " required>
+                        <label for="cpf">CPF</label>
+                    </div>
+                    <div class="input-group w50">
+                        <input type="text" id="telefone" name="telefone" placeholder=" " required>
+                        <label for="telefone">Telefone</label>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group w50">
+                        <input type="text" id="veiculo" name="veiculo" placeholder=" " required>
+                        <label for="veiculo">Veículo</label>
+                    </div>
+                    <div class="input-group w50">
+                        <input type="text" id="placa" name="placa" placeholder=" " required>
+                        <label for="placa">Placa</label>
+                    </div>
+                </div>
+                <div class="input-row2">
+                    <div class="input-group w50">
+                        <input type="date" id="dataEntrada" name="dataEntrada" placeholder=" " required>
+                        <label for="dataEntrada">Data de Entrada</label>
+                    </div>
+                    <div class="input-group w50">
+                        <input type="date" id="dataSaida" name="dataSaida" placeholder=" ">
+                        <label for="dataSaida">Data de Saída</label>
+                    </div>
+                    <div class="input-group w50">
+                        <input type="time" id="horaEntrada" name="horaEntrada" placeholder=" " required>
+                        <label for="horaEntrada">Hora de Entrada</label>
+                    </div>
+                    <div class="input-group w50">
+                        <input type="time" id="horaSaida" name="horaSaida" placeholder=" ">
+                        <label for="horaSaida">Hora de Saída</label>
+                    </div>
+                </div>
+                <div class="selectPecas">
+                    <select id="tipo" name="tipo" required>
+                        <option value="" disabled selected>Selecione o Tipo</option>
+                        <option value="orcamento">Orçamento</option>
+                        <option value="ordem_servico">Ordem de Serviço</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <button type="button" onclick="abrirModal()">Adicionar Produto/Serviço</button>
+                </div>
+                <div class="item-list">
+                    <h3>Itens na OS:</h3>
+                    <table id="itens-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nome</th>
+                                <th>Quantidade</th>
+                                <th>Valor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Itens adicionados -->
+                        </tbody>
+                    </table>
+                </div>
+                <input type="hidden" id="descricaoServicos" value="[]">
+                <input type="hidden" id="produtos" value="[]">
+                <div class="input-group">
+                    <button class="return" type="button" onclick="window.location.href='listaOS.html'">Retornar</button>
+                    <button class="add" type="submit">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script src="assets/js/script.js"></script>
+</body>
+<div id="footer-container"></div>
+</html>

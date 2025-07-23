@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Ordens de Serviço</title>
+    <link rel="stylesheet" href="assets/css/Lista.css">
+    <link rel="stylesheet" href="assets/css/HeaderFooter.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body class="background">
+    <main class="page">
+        <div id="sidebar-container" class="sidebar">
+            <button class="closebtn" onclick="toggleSidebar()">×</button>
+        </div>
+        <header class="header">
+            <button class="openbtn" onclick="toggleSidebar()">☰</button>
+            <h4>Ordens de Serviço</h4>
+            <img 
+                src="7124045_logout_icon.svg" 
+                alt="Logout" 
+                id="logout-icon" 
+                onclick="window.location.href='login.html'" 
+                style="cursor: pointer; width: 30px; height: 30px;">
+        </header>
+
+        <div class="container">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Pesquisar Ordem..." onkeyup="searchTables()">
+                <button class="search-btn" onclick="window.location.href='CadastroOS.html'">Cadastrar</button>
+            </div>
+
+            <div class="table-container">
+                <h2>Lista de Ordens de Serviço</h2>
+                <table id="searchTable">
+                    <thead>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/listarOS.js"></script>
+</body>
+<div id="footer-container"></div>
+</html>
