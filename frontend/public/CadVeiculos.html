@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Veículos</title>
+  <link rel="stylesheet" href="assets/css/CadVeiculos.css">
+    <link rel="stylesheet" href="assets/css/HeaderFooter.css">
+</head>
+
+<body>
+  <!-- Barra lateral -->
+  <div id="sidebar-container" class="sidebar">
+    <button class="closebtn" onclick="toggleSidebar()">x</button>
+  </div>
+
+  <!-- Cabeçalho -->
+  <header class="header">
+    <button class="openbtn" onclick="toggleSidebar()">☰</button>
+    <h2>Cadastro de Veículos</h2>
+    <img src="7124045_logout_icon.svg"
+         alt="Logout"
+         id="logout-icon"
+         onclick="location.href='login.html'"
+         style="cursor:pointer;width:30px;height:30px;" />
+  </header>
+
+  <!-- Formulário -->
+  <main class="page">
+    <div class="content">
+      <h1>Cadastro de Veículos</h1><br />
+
+      <form class="form-grid">
+        <!-- === 1ª coluna / 2ª coluna — grid se ajusta automaticamente === -->
+        <div class="input-group short">
+          <label for="veiculo-id">ID</label>
+          <input type="text" id="veiculo-id" maxlength="20" />
+        </div>
+
+        <div class="input-group long">
+          <label for="cliente">Cliente</label>
+          <input type="text" id="cliente" />
+        </div>
+
+        <div class="input-group medium">
+          <label for="marca">Marca</label>
+          <input type="text" id="marca" />
+        </div>
+
+        <div class="input-group medium">
+          <label for="modelo">Modelo</label>
+          <input type="text" id="modelo" />
+        </div>
+
+        <div class="input-group short">
+          <label for="ano">Ano</label>
+          <input type="text" id="ano" />
+        </div>
+
+        <div class="input-group medium">
+          <label for="placa">Placa</label>
+          <input type="text" id="placa" required />
+        </div>
+
+        <div class="input-group medium">
+          <label for="cor">Cor</label>
+          <input type="text" id="cor" />
+        </div>
+
+        <div class="input-group short">
+          <label for="km">KM</label>
+          <input type="text" id="km" />
+        </div>
+
+        <div class="input-group long">
+          <label for="observacoes">Observações</label>
+          <input type="text" id="observacoes" />
+        </div>
+
+        <div class="input-group medium">
+          <label for="criado-em">Criado em</label>
+          <input type="text" id="criado-em" required />
+        </div>
+
+        <div class="form-actions">
+        <button class="form-button add" type="submit"
+          onclick="location.href='Entradas.html'">
+          Confirmar entrada
+        </button>
+        <button class="form-button return" type="button"
+          onclick="location.href='Home.html'">
+          Retornar
+        </button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+
+ <script src="assets/js/script.js"></script>
+</body>
+</html>

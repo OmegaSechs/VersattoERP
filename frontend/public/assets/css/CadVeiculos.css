@@ -1,0 +1,123 @@
+/* ===== Reset ===== */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Helvetica, Arial, sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:#2d3e5091;
+  color:#2D3E50;
+}
+
+/* ===== Cabeçalho ===== */
+.header{
+  background:#2D3E50;
+  color:#fff;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 20px;
+}
+.openbtn{
+  background:#2D3E50;
+  color:#fff;
+  border:none;
+  font-size:18px;
+  padding:10px 15px;
+  cursor:pointer;
+  transition:transform .2s;
+}
+.openbtn:hover{transform:scale(1.05);background:#1B2A38;}
+
+/* ================================================================= */
+/* ==========================  ALTERADO  ============================ */
+/* ================================================================= */
+
+/* ===== Conteúdo principal ===== */
+.page{display:flex;justify-content:center;padding:0 20px;}
+.content{
+  /* agora ocupa 90 % da viewport  */
+  width:90vw;               /* 90 % da janela de exibição  */
+  max-width:none;           /* remove limite de 1200 px     */
+  background:#f8f8f8;
+  padding:30px;
+  margin-top:40px;          /* GAP entre header e formulário */
+  border-radius:5px;
+  box-shadow:0 0 30px rgba(0,0,0,.5);
+}
+
+/* === Grid de formulário === */
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+                                 /* ↑ min 320 px por coluna
+                                    ↑ cresce igualmente até preencher 90 %  */
+  gap:24px 32px;                 /* linha x coluna */
+}
+
+/* ===== Grupo label+campo ===== */
+.input-group{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.input-group label{
+  font-size:clamp(0.9rem,1vw,1.1rem);  /* tamanho proporcional à viewport */
+  font-weight:600;
+}
+.input-group input{
+  padding:10px;
+  border:1px solid #ccc;
+  border-radius:10px;
+  font-size:clamp(0.95rem,1vw,1.15rem); /* idem */
+  background:#fff;
+  width:100%;                          /* sempre ocupa 100 % do bloco grid */
+}
+.input-group input:focus{
+  border-color:#000000;
+  outline:none;
+}
+
+/* ===== Coluna que cada campo ocupa (proporção) ===== */
+.input-group.short { grid-column:span 1; }   /* ID, Ano, KM              */
+.input-group.medium{ grid-column:span 1; }   /* Marca, Modelo, Placa …   */
+.input-group.long  { grid-column:span 2; }   /* Cliente, Observações     */
+
+/* ===== Ações (botões) — linha inteira ===== */
+.form-actions{
+  grid-column:1 / -1;           /* ocupa todas as colunas */
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px;
+  margin-top:12px;
+}
+
+/* ===== Botões ===== */
+/* ===== Botões do formulário ===== */
+.form-actions .form-button {
+  background:transparent;
+  border:2px solid #1A1A1A;
+  border-radius:15px;
+  padding:1em 2.3em;
+  font-weight:600;
+  font-size:16px;
+  cursor:pointer;
+  transition:all .3s cubic-bezier(.23,1,.32,1);
+}
+
+.form-actions .form-button:hover {
+  background:#1A1A1A;
+  color:#fff;
+  box-shadow:rgba(0,0,0,.25) 0 8px 15px;
+  transform:translateY(-2px);
+}
+.form-actions .form-button:active {
+  transform:translateY(0);
+  box-shadow:none;
+}
+.form-actions .form-button:disabled {
+  pointer-events:none;
+}
