@@ -265,3 +265,82 @@ button.add:active, button.return:active {
         font-size: 14px;
     }
 }
+
+/* ===== Botões de Ação nas Tabelas ===== */
+.btn-editar, .btn-excluir {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    margin: 2px;
+}
+.btn-editar {
+    background-color: #2D3E50;
+    color: #fff;
+}
+.btn-editar:hover {
+    background-color: #1a2a38;
+    transform: translateY(-1px);
+}
+.btn-excluir {
+    background-color: #c0392b;
+    color: #fff;
+}
+.btn-excluir:hover {
+    background-color: #962d22;
+    transform: translateY(-1px);
+}
+
+/* ===== Badges de Status ===== */
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.status-aberta      { background: #d4edda; color: #155724; }
+.status-em_andamento { background: #fff3cd; color: #856404; }
+.status-concluida   { background: #cce5ff; color: #004085; }
+.status-cancelada   { background: #f8d7da; color: #721c24; }
+
+/* ===== Botão search-btn (compatibilidade) ===== */
+.search-btn {
+    padding: 10px 20px;
+    appearance: none;
+    background-color: transparent;
+    border: 0.14em solid #1A1A1A;
+    border-radius: 0.9375em;
+    color: #3B3B3B;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+}
+.search-btn:hover {
+    color: #fff;
+    background-color: #1A1A1A;
+    box-shadow: rgba(0,0,0,0.25) 0 8px 15px;
+    transform: translateY(-2px);
+}
+
+.btn-imprimir-os {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    margin: 2px;
+    background-color: #27ae60;
+    color: #fff;
+}
+.btn-imprimir-os:hover {
+    background-color: #1e8449;
+    transform: translateY(-1px);
+}

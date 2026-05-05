@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuários — Versatto ERP</title>
+  <link rel="stylesheet" href="assets/css/Lista.css">
+  <link rel="stylesheet" href="assets/css/HeaderFooter.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body class="background">
+  <main class="page">
+    <div id="sidebar-container" class="sidebar">
+      <button class="closebtn" onclick="toggleSidebar()">×</button>
+    </div>
+    <header class="header">
+      <button class="openbtn" onclick="toggleSidebar()">☰</button>
+      <h4>Gerenciar Usuários</h4>
+      <img src="7124045_logout_icon.svg" alt="Logout" onclick="logout()" style="cursor:pointer;width:30px;height:30px;">
+    </header>
+
+    <div class="container">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Pesquisar usuário..." onkeyup="searchTables()">
+        <div class="action-buttons">
+          <button class="add" onclick="abrirModalNovoUsuario()">+ Novo Usuário</button>
+        </div>
+      </div>
+      <div class="table-container">
+        <h2>Usuários do Sistema</h2>
+        <table id="searchTable">
+          <thead>
+            <tr><th>ID</th><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Situação</th><th>Criado em</th><th>Ações</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/script.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', carregarUsuarios);
+
+    async function carregarUsuarios() {
+      const tbody = document.querySelector('#searchTable tbody');
+      tbody.innerHTML = '<tr><td colspan="7">Carregando…</td></tr>';
+      const r = await api.get('/usuarios');
+      if (!r.ok) { tbody.innerHTML = '<tr><td colspan="7">Sem permissão ou erro.</td></tr>'; return; }
+      const lista = await r.json();
+      tbody.innerHTML = '';
+      lista.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${u.id}</td><td>${u.nome}</td><td>${u.email}</td>
+          <td><span style="background:${u.perfil==='admin'?'#2D3E50':'#ccc'};color:${u.perfil==='admin'?'#fff':'#333'};padding:2px 10px;border-radius:10px;font-size:12px;">${u.perfil}</span></td>
+          <td><span style="background:${u.ativo?'#d4edda':'#f8d7da'};color:${u.ativo?'#155724':'#721c24'};padding:2px 10px;border-radius:10px;font-size:12px;">${u.ativo?'Ativo':'Inativo'}</span></td>
+          <td>${new Date(u.criado_em).toLocaleDateString('pt-BR')}</td>
+          <td>
+            <button class="btn-editar" onclick="editarUsuario(${u.id},'${u.nome.replace(/'/g,"\\'")}','${u.email}','${u.perfil}',${u.ativo})">Editar</button>
+            <button class="btn-excluir" onclick="excluirUsuario(${u.id},'${u.nome.replace(/'/g,"\\'")}')">Excluir</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function abrirModalNovoUsuario() { mostrarModal(null, '', '', 'operador', true); }
+    function editarUsuario(id, nome, email, perfil, ativo) { mostrarModal(id, nome, email, perfil, ativo); }
+
+    function mostrarModal(id, nome, email, perfil, ativo) {
+      let m = document.getElementById('modalUsuario'); if (m) m.remove();
+      m = document.createElement('div'); m.id = 'modalUsuario';
+      m.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
+      document.body.appendChild(m);
+      m.innerHTML = `
+        <div style="background:#fff;padding:30px;border-radius:8px;width:90%;max-width:480px;">
+          <h2 style="margin-bottom:20px;color:#2D3E50;">${id?'Editar':'Novo'} Usuário</h2>
+          <form id="formUsuario">
+            <div style="margin-bottom:12px;"><label>Nome</label><br>
+              <input id="u_nome" value="${nome}" required style="width:100%;padding:8px;margin-top:4px;border:1px solid #ccc;border-radius:4px;"></div>
+            <div style="margin-bottom:12px;"><label>E-mail</label><br>
+              <input id="u_email" type="email" value="${email}" ${id?'readonly':''} required style="width:100%;padding:8px;margin-top:4px;border:1px solid #ccc;border-radius:4px;background:${id?'#f5f5f5':'#fff'}"></div>
+            <div style="margin-bottom:12px;"><label>Perfil</label><br>
+              <select id="u_perfil" style="width:100%;padding:8px;margin-top:4px;border:1px solid #ccc;border-radius:4px;">
+                <option value="operador" ${perfil==='operador'?'selected':''}>Operador</option>
+                <option value="admin" ${perfil==='admin'?'selected':''}>Administrador</option>
+              </select></div>
+            <div style="margin-bottom:12px;"><label>${id?'Nova Senha (deixe vazio para manter)':'Senha *'}</label><br>
+              <input id="u_senha" type="password" ${!id?'required':''} style="width:100%;padding:8px;margin-top:4px;border:1px solid #ccc;border-radius:4px;" placeholder="${id?'Deixe vazio para não alterar':'Mínimo 6 caracteres'}"></div>
+            ${id?`<div style="margin-bottom:12px;"><label><input type="checkbox" id="u_ativo" ${ativo?'checked':''}> Usuário ativo</label></div>`:''}
+            <div style="display:flex;gap:12px;margin-top:16px;">
+              <button type="submit" style="flex:1;padding:10px;background:#2D3E50;color:#fff;border:none;border-radius:6px;cursor:pointer;">Salvar</button>
+              <button type="button" onclick="document.getElementById('modalUsuario').remove()" style="flex:1;padding:10px;background:#ccc;border:none;border-radius:6px;cursor:pointer;">Cancelar</button>
+            </div>
+          </form>
+        </div>`;
+
+      document.getElementById('formUsuario').onsubmit = async e => {
+        e.preventDefault();
+        const dados = {
+          nome: document.getElementById('u_nome').value,
+          email: document.getElementById('u_email').value,
+          perfil: document.getElementById('u_perfil').value,
+          ativo: id ? document.getElementById('u_ativo').checked : true,
+        };
+        const senha = document.getElementById('u_senha').value;
+        if (senha) { id ? dados.nova_senha = senha : dados.senha = senha; }
+
+        const resp = id ? await api.put(`/usuarios/${id}`, dados) : await api.post('/usuarios', dados);
+        if (resp.ok) {
+          alert(id?'Usuário atualizado!':'Usuário criado!');
+          document.getElementById('modalUsuario').remove();
+          carregarUsuarios();
+        } else {
+          const er = await resp.json(); alert(er.erro||'Erro ao salvar');
+        }
+      };
+    }
+
+    async function excluirUsuario(id, nome) {
+      if (!confirm(`Excluir usuário "${nome}"?`)) return;
+      const r = await api.delete(`/usuarios/${id}`);
+      if (r.ok) { alert('Excluído!'); carregarUsuarios(); }
+      else { const e = await r.json(); alert(e.erro||'Erro'); }
+    }
+  </script>
+</body>
+</html>

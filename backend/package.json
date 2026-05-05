@@ -1,21 +1,21 @@
 {
-  "name": "versatto---desenvolvimento",
-  "version": "1.0.0",
+  "name": "versatto-erp",
+  "version": "2.0.0",
+  "description": "ERP para oficinas mecânicas",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "node  --watch --no-warnings server.js"
+    "dev":   "node --watch --no-warnings server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@fastify/cors": "^11.0.1",
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/cors":   "^11.0.1",
+    "@fastify/jwt":    "^9.1.0",
     "@fastify/static": "^8.2.0",
-    "dotenv": "^17.2.0",
-    "fastify": "^5.4.0",
-    "pg": "^8.16.3"
-  },
-  "description": ""
+    "bcrypt":          "^5.1.1",
+    "dotenv":          "^17.2.0",
+    "fastify":         "^5.4.0",
+    "jsonwebtoken":    "^9.0.2",
+    "pg":              "^8.16.3"
+  }
 }

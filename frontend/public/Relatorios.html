@@ -1,21 +1,268 @@
 <!DOCTYPE html>
-<html lang="Pt-br">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatórios</title>
-    <link rel="stylesheet" href="assets/css/Home.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatório de Faturamento — Versatto ERP</title>
+  <link rel="stylesheet" href="assets/css/HeaderFooter.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background: #979ea7; min-height: 100vh; }
+    .page { display: flex; flex-direction: column; min-height: 100vh; }
+    .content { flex: 1; padding: 24px; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+    /* ── Filtros ── */
+    .filtros {
+      background: #fff; border-radius: 8px; padding: 20px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.12); margin-bottom: 24px;
+      display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px;
+    }
+    .filtros label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 4px; }
+    .filtros input, .filtros select {
+      padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px;
+      font-size: 14px; width: 160px;
+    }
+    .btn-buscar {
+      padding: 9px 24px; background: #2D3E50; color: #fff;
+      border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;
+    }
+    .btn-buscar:hover { background: #1a2a38; }
+    .btn-imprimir {
+      padding: 9px 20px; background: #27ae60; color: #fff;
+      border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;
+    }
+    .btn-imprimir:hover { background: #1e8449; }
+
+    /* ── Cards de resumo ── */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 16px; margin-bottom: 24px; }
+    .card {
+      background: #fff; border-radius: 8px; padding: 20px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.12); text-align: center;
+    }
+    .card .valor { font-size: 28px; font-weight: 700; color: #2D3E50; margin: 8px 0 4px; }
+    .card .label { font-size: 13px; color: #777; }
+    .card.verde .valor { color: #27ae60; }
+    .card.azul  .valor { color: #2980b9; }
+
+    /* ── Tabelas ── */
+    .secao { background: #fff; border-radius: 8px; padding: 20px 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+    .secao h3 { font-size: 16px; color: #2D3E50; margin-bottom: 16px; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px 12px; border: 1px solid #e8e8e8; font-size: 14px; }
+    th { background: #f4f6f8; font-weight: 600; color: #333; text-align: left; }
+    tr:hover td { background: #fafafa; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .status-badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+    .status-concluida   { background:#d4edda; color:#155724; }
+    .status-aberta      { background:#fff3cd; color:#856404; }
+    .status-em_andamento{ background:#cce5ff; color:#004085; }
+    .status-cancelada   { background:#f8d7da; color:#721c24; }
+
+    /* ── Mensagens ── */
+    #msgCarregando { text-align: center; padding: 40px; color: #555; font-size: 16px; }
+    #msgVazio      { text-align: center; padding: 40px; color: #999; }
+
+    @media print {
+      .header, #sidebar-container, .filtros .btn-buscar, .btn-imprimir,
+      #footer-container { display: none !important; }
+      .content { padding: 0; max-width: 100%; }
+      .cards, .secao { box-shadow: none; }
+    }
+  </style>
 </head>
 <body>
-    <div id="sidebar-container"></div>
-
-    <div class="home">
-        <button class="openbtn" onclick="toggleSidebar()">☰ Menu</button>
+  <div class="page">
+    <div id="sidebar-container" class="sidebar">
+      <button class="closebtn" onclick="toggleSidebar()">×</button>
     </div>
-    
-<script src="assets/js/script.js"></script>	
+    <header class="header">
+      <button class="openbtn" onclick="toggleSidebar()">☰</button>
+      <h4>Relatório de Faturamento</h4>
+      <img src="7124045_logout_icon.svg" alt="Logout" onclick="logout()" style="cursor:pointer;width:30px;height:30px;">
+    </header>
 
+    <div class="content">
+
+      <!-- Filtros -->
+      <div class="filtros">
+        <div>
+          <label>Data inicial</label>
+          <input type="date" id="filtro_de">
+        </div>
+        <div>
+          <label>Data final</label>
+          <input type="date" id="filtro_ate">
+        </div>
+        <div>
+          <label>Status</label>
+          <select id="filtro_status">
+            <option value="" selected>Todos</option>
+            <option value="concluida">Concluída</option>
+            <option value="aberta">Aberta</option>
+            <option value="em_andamento">Em Andamento</option>
+            <option value="cancelada">Cancelada</option>
+          </select>
+        </div>
+        <button class="btn-buscar" onclick="buscarRelatorio()">🔍 Buscar</button>
+        <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir</button>
+      </div>
+
+      <div id="resultado" style="display:none;">
+        <!-- Cards de resumo -->
+        <div class="cards">
+          <div class="card verde">
+            <div class="label">Faturamento Bruto</div>
+            <div class="valor" id="card_faturamento">R$ 0,00</div>
+          </div>
+          <div class="card azul">
+            <div class="label">Total de OS</div>
+            <div class="valor" id="card_total_os">0</div>
+          </div>
+          <div class="card">
+            <div class="label">Ticket Médio</div>
+            <div class="valor" id="card_ticket">R$ 0,00</div>
+          </div>
+        </div>
+
+        <!-- Faturamento por mês -->
+        <div class="secao">
+          <h3>📅 Faturamento por Mês</h3>
+          <table>
+            <thead><tr><th>Mês</th><th class="num">Nº OS</th><th class="num">Faturamento</th></tr></thead>
+            <tbody id="tabela_meses"></tbody>
+          </table>
+        </div>
+
+        <!-- Top serviços/produtos -->
+        <div class="secao">
+          <h3>🔧 Top 10 Produtos/Serviços</h3>
+          <table>
+            <thead><tr><th>Item</th><th class="num">Qtd</th><th class="num">Faturamento</th></tr></thead>
+            <tbody id="tabela_itens"></tbody>
+          </table>
+        </div>
+
+        <!-- Top clientes -->
+        <div class="secao">
+          <h3>👤 Top 10 Clientes</h3>
+          <table>
+            <thead><tr><th>Cliente</th><th class="num">Nº OS</th><th class="num">Faturamento</th></tr></thead>
+            <tbody id="tabela_clientes"></tbody>
+          </table>
+        </div>
+
+        <!-- Lista detalhada -->
+        <div class="secao">
+          <h3>📋 Lista de Ordens de Serviço</h3>
+          <table>
+            <thead>
+              <tr><th>OS</th><th>Data</th><th>Cliente</th><th>Veículo</th><th>Placa</th><th>Status</th><th class="num">Total R$</th></tr>
+            </thead>
+            <tbody id="tabela_lista"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="msgCarregando" style="display:none;">⏳ Carregando relatório…</div>
+      <div id="msgVazio" style="display:none;">Nenhum dado encontrado para o período selecionado.</div>
+
+    </div><!-- /content -->
+  </div><!-- /page -->
+
+  <div id="footer-container"></div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/script.js"></script>
+  <script>
+    // Preenche data inicial com primeiro dia do mês atual
+    const hoje = new Date();
+    document.getElementById('filtro_de').value =
+      `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-01`;
+    document.getElementById('filtro_ate').value =
+      hoje.toISOString().split('T')[0];
+
+    const brl = v => Number(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    const fmt = s => { try { return new Date(s+'T00:00:00').toLocaleDateString('pt-BR'); } catch { return s; } };
+    const mesLabel = s => { try { const [y,m]=s.split('-'); return `${['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][parseInt(m)-1]}/${y}`; } catch { return s; } };
+
+    async function buscarRelatorio() {
+      const de     = document.getElementById('filtro_de').value;
+      const ate    = document.getElementById('filtro_ate').value;
+      const status = document.getElementById('filtro_status').value;
+
+      document.getElementById('resultado').style.display    = 'none';
+      document.getElementById('msgVazio').style.display     = 'none';
+      document.getElementById('msgCarregando').style.display = 'block';
+
+      let url = `/relatorios/faturamento?`;
+      if (de)     url += `de=${de}&`;
+      if (ate)    url += `ate=${ate}&`;
+      if (status) url += `status=${status}`;
+
+      try {
+        const r = await api.get(url);
+        const d = await r.json();
+
+        document.getElementById('msgCarregando').style.display = 'none';
+
+        if (!d.lista || d.lista.length === 0) {
+          document.getElementById('msgVazio').style.display = 'block';
+          return;
+        }
+
+        // Cards
+        document.getElementById('card_faturamento').textContent = brl(d.resumo.faturamento_bruto);
+        document.getElementById('card_total_os').textContent    = d.resumo.total_os;
+        document.getElementById('card_ticket').textContent      = brl(d.resumo.ticket_medio);
+
+        // Por mês
+        document.getElementById('tabela_meses').innerHTML = d.por_mes.map(m => `
+          <tr>
+            <td>${mesLabel(m.mes)}</td>
+            <td class="num">${m.total_os}</td>
+            <td class="num">${brl(m.faturamento)}</td>
+          </tr>`).join('');
+
+        // Top itens
+        document.getElementById('tabela_itens').innerHTML = d.top_itens.map(it => `
+          <tr>
+            <td>${it.nome}</td>
+            <td class="num">${Number(it.qtd_total).toFixed(1)}</td>
+            <td class="num">${brl(it.faturamento)}</td>
+          </tr>`).join('');
+
+        // Top clientes
+        document.getElementById('tabela_clientes').innerHTML = d.top_clientes.map(c => `
+          <tr>
+            <td>${c.cliente||'—'}</td>
+            <td class="num">${c.total_os}</td>
+            <td class="num">${brl(c.faturamento)}</td>
+          </tr>`).join('');
+
+        // Lista detalhada
+        document.getElementById('tabela_lista').innerHTML = d.lista.map(os => `
+          <tr>
+            <td>#${os.os_id}</td>
+            <td>${fmt(os.os_dt_entrada)}</td>
+            <td>${os.cliente_nome||'—'}</td>
+            <td>${os.veiculo||''}</td>
+            <td>${os.placa||''}</td>
+            <td><span class="status-badge status-${os.status}">${
+              {concluida:'Concluída',aberta:'Aberta',em_andamento:'Em Andamento',cancelada:'Cancelada'}[os.status]||os.status
+            }</span></td>
+            <td class="num">${brl(os.valor_total)}</td>
+          </tr>`).join('');
+
+        document.getElementById('resultado').style.display = 'block';
+      } catch(err) {
+        document.getElementById('msgCarregando').style.display = 'none';
+        alert('Erro ao carregar relatório: ' + err.message);
+      }
+    }
+
+    // Carrega automaticamente ao abrir
+    window.addEventListener('DOMContentLoaded', buscarRelatorio);
+  </script>
 </body>
-<div id="footer-container"></div>
 </html>

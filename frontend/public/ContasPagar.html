@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contas a Pagar — Versatto ERP</title>
+  <link rel="stylesheet" href="assets/css/HeaderFooter.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background: #979ea7; min-height: 100vh; }
+    .page { display: flex; flex-direction: column; min-height: 100vh; }
+    .content { flex: 1; padding: 24px; max-width: 1300px; margin: 0 auto; width: 100%; }
+
+    .filtros {
+      background: #fff; border-radius: 8px; padding: 16px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.12); margin-bottom: 20px;
+      display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px;
+    }
+    .filtros label { display: block; font-size: 12px; font-weight: 600; color: #555; margin-bottom: 3px; }
+    .filtros input, .filtros select { padding: 7px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; }
+    .btn { padding: 8px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
+    .btn-buscar { background: #2D3E50; color: #fff; }
+    .btn-novo   { background: #c0392b; color: #fff; }
+    .btn-buscar:hover { background: #1a2a38; }
+    .btn-novo:hover   { background: #922b21; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 14px; margin-bottom: 20px; }
+    .card { background: #fff; border-radius: 8px; padding: 16px 20px; box-shadow: 0 2px 8px rgba(0,0,0,.12); text-align: center; }
+    .card .valor { font-size: 24px; font-weight: 700; margin: 6px 0 3px; }
+    .card .label { font-size: 12px; color: #777; }
+    .card.amarelo .valor { color: #e67e22; }
+    .card.vermelho .valor { color: #c0392b; }
+    .card.cinza .valor { color: #7f8c8d; }
+    .card.azul .valor { color: #2980b9; }
+
+    .secao { background: #fff; border-radius: 8px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 9px 11px; border: 1px solid #e8e8e8; font-size: 13px; }
+    th { background: #f4f6f8; font-weight: 600; color: #333; text-align: left; }
+    tr:hover td { background: #fafafa; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .ctr { text-align: center; }
+
+    .badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+    .s-pendente  { background: #fff3cd; color: #856404; }
+    .s-pago      { background: #d4edda; color: #155724; }
+    .s-cancelado { background: #e2e3e5; color: #383d41; }
+    .s-atrasado  { background: #f8d7da; color: #721c24; }
+
+    .btn-sm { padding: 3px 9px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600; margin: 1px; }
+    .btn-pagar    { background: #27ae60; color: #fff; }
+    .btn-cancelar { background: #e67e22; color: #fff; }
+    .btn-excluir  { background: #c0392b; color: #fff; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div id="sidebar-container" class="sidebar"><button class="closebtn" onclick="toggleSidebar()">×</button></div>
+  <header class="header">
+    <button class="openbtn" onclick="toggleSidebar()">☰</button>
+    <h4>Contas a Pagar</h4>
+    <img src="7124045_logout_icon.svg" alt="Logout" onclick="logout()" style="cursor:pointer;width:30px;height:30px;">
+  </header>
+
+  <div class="content">
+
+    <div class="filtros">
+      <div>
+        <label>Status</label>
+        <select id="f-status">
+          <option value="">Todos</option>
+          <option value="pendente">Pendente</option>
+          <option value="pago">Pago</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
+      </div>
+      <div>
+        <label>Vencimento de</label>
+        <input type="date" id="f-de">
+      </div>
+      <div>
+        <label>Até</label>
+        <input type="date" id="f-ate">
+      </div>
+      <button class="btn btn-buscar" onclick="carregar()">🔍 Buscar</button>
+      <button class="btn btn-novo" onclick="abrirModalNovo()">+ Nova Conta</button>
+    </div>
+
+    <div class="cards">
+      <div class="card amarelo">
+        <div class="label">Pendente</div>
+        <div class="valor" id="c-pendente">R$ 0,00</div>
+      </div>
+      <div class="card vermelho">
+        <div class="label">Em Atraso</div>
+        <div class="valor" id="c-atrasado">R$ 0,00</div>
+      </div>
+      <div class="card cinza">
+        <div class="label">Pago</div>
+        <div class="valor" id="c-pago">R$ 0,00</div>
+      </div>
+      <div class="card azul">
+        <div class="label">Total de Registros</div>
+        <div class="valor" id="c-total">0</div>
+      </div>
+    </div>
+
+    <div class="secao">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Fornecedor</th><th>Descrição</th><th>Categoria</th>
+            <th class="ctr">Vencimento</th><th class="num">Valor</th>
+            <th class="ctr">Status</th><th class="ctr">Dt. Pgto</th><th class="ctr">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-corpo">
+          <tr><td colspan="9" style="text-align:center;padding:30px;color:#999;">Clique em Buscar para carregar.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+<div id="footer-container"></div>
+
+<script src="assets/js/api.js"></script>
+<script src="assets/js/script.js"></script>
+<script>
+  const brl = v => Number(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  const fmtDate = s => { if (!s) return '—'; const [y,m,d] = String(s).split('T')[0].split('-'); return `${d}/${m}/${y}`; };
+  const hoje = new Date().toISOString().split('T')[0];
+
+  let fornecedores = [];
+  api.get('/fornecedores').then(r => r.json()).then(l => { fornecedores = l; }).catch(() => {});
+
+  async function carregar() {
+    const status = document.getElementById('f-status').value;
+    const de     = document.getElementById('f-de').value;
+    const ate    = document.getElementById('f-ate').value;
+    let url = '/financeiro/pagar?';
+    if (status) url += `status=${status}&`;
+    if (de)     url += `de=${de}&`;
+    if (ate)    url += `ate=${ate}`;
+
+    const tbody = document.getElementById('tabela-corpo');
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;">Carregando…</td></tr>';
+
+    try {
+      const r = await api.get(url);
+      const lista = await r.json();
+
+      tbody.innerHTML = '';
+      let totPendente = 0, totAtrasado = 0, totPago = 0;
+
+      if (!lista.length) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:#999;">Nenhum registro encontrado.</td></tr>';
+      } else {
+        lista.forEach(p => {
+          const venc = p.vencimento ? String(p.vencimento).split('T')[0] : '';
+          const atrasado = p.status === 'pendente' && venc < hoje;
+          if (atrasado) totAtrasado += Number(p.valor);
+          else if (p.status === 'pendente') totPendente += Number(p.valor);
+          else if (p.status === 'pago') totPago += Number(p.valor);
+
+          const statusKey = atrasado ? 'atrasado' : p.status;
+          const statusLabel = { pendente:'Pendente', pago:'Pago', cancelado:'Cancelado', atrasado:'Atrasado' };
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${p.id}</td>
+            <td>${p.fornecedor_nome||'—'}</td>
+            <td>${p.descricao}</td>
+            <td>${p.categoria||'—'}</td>
+            <td class="ctr">${fmtDate(p.vencimento)}</td>
+            <td class="num">${brl(p.valor)}</td>
+            <td class="ctr"><span class="badge s-${statusKey}">${statusLabel[statusKey]||p.status}</span></td>
+            <td class="ctr">${fmtDate(p.data_pagamento)}</td>
+            <td class="ctr">
+              ${p.status==='pendente'?`<button class="btn-sm btn-pagar" onclick="marcarPago(${p.id})">Pagar</button>`:''}
+              ${p.status==='pendente'?`<button class="btn-sm btn-cancelar" onclick="cancelar(${p.id})">Cancelar</button>`:''}
+              <button class="btn-sm btn-excluir" onclick="excluir(${p.id})">×</button>
+            </td>`;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById('c-pendente').textContent = brl(totPendente);
+      document.getElementById('c-atrasado').textContent = brl(totAtrasado);
+      document.getElementById('c-pago').textContent     = brl(totPago);
+      document.getElementById('c-total').textContent    = lista.length;
+    } catch(err) {
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#c0392b;">Erro: ${err.message}</td></tr>`;
+    }
+  }
+
+  async function marcarPago(id) {
+    const data = prompt('Data do pagamento:', hoje);
+    if (!data) return;
+    const r = await api.put(`/financeiro/pagar/${id}`, { status: 'pago', data_pagamento: data });
+    if (r && r.ok) carregar(); else { const e = await r.json(); alert(e.erro||'Erro'); }
+  }
+
+  async function cancelar(id) {
+    if (!confirm('Cancelar esta conta?')) return;
+    const r = await api.put(`/financeiro/pagar/${id}`, { status: 'cancelado' });
+    if (r && r.ok) carregar(); else { const e = await r.json(); alert(e.erro||'Erro'); }
+  }
+
+  async function excluir(id) {
+    if (!confirm('Excluir este registro?')) return;
+    const r = await api.delete(`/financeiro/pagar/${id}`);
+    if (r && r.ok) carregar(); else { const e = await r.json(); alert(e.erro||'Erro'); }
+  }
+
+  function abrirModalNovo() {
+    let modal = document.getElementById('modalNovo');
+    if (modal) modal.remove();
+    modal = document.createElement('div');
+    modal.id = 'modalNovo';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
+    document.body.appendChild(modal);
+
+    const optsForn = fornecedores.map(f => `<option value="${f.pessoa_id}">${f.nome}</option>`).join('');
+
+    modal.innerHTML = `
+      <div style="background:#fff;padding:28px;border-radius:8px;width:90%;max-width:520px;max-height:90vh;overflow-y:auto;">
+        <h3 style="margin-bottom:18px;color:#2D3E50;">Nova Conta a Pagar</h3>
+
+        <label style="font-size:13px;font-weight:600;">Fornecedor</label><br>
+        <select id="n-forn" style="width:100%;padding:8px;margin:4px 0 12px;border:1px solid #ccc;border-radius:4px;">
+          <option value="">— Nenhum —</option>${optsForn}
+        </select>
+
+        <label style="font-size:13px;font-weight:600;">Descrição *</label><br>
+        <input id="n-desc" type="text" style="width:100%;padding:8px;margin:4px 0 12px;border:1px solid #ccc;border-radius:4px;">
+
+        <label style="font-size:13px;font-weight:600;">Categoria</label><br>
+        <input id="n-cat" type="text" placeholder="Ex: Aluguel, Peças, Serviços…" style="width:100%;padding:8px;margin:4px 0 12px;border:1px solid #ccc;border-radius:4px;">
+
+        <label style="font-size:13px;font-weight:600;">Valor (R$) *</label><br>
+        <input id="n-valor" type="number" step="0.01" min="0.01" style="width:100%;padding:8px;margin:4px 0 12px;border:1px solid #ccc;border-radius:4px;">
+
+        <label style="font-size:13px;font-weight:600;">Vencimento *</label><br>
+        <input id="n-venc" type="date" value="${hoje}" style="width:100%;padding:8px;margin:4px 0 12px;border:1px solid #ccc;border-radius:4px;">
+
+        <label style="font-size:13px;font-weight:600;">Observações</label><br>
+        <textarea id="n-obs" style="width:100%;padding:8px;margin:4px 0 12px;border:1px solid #ccc;border-radius:4px;height:55px;"></textarea>
+
+        <div style="display:flex;gap:12px;margin-top:4px;">
+          <button onclick="salvarNovo()" style="flex:1;padding:10px;background:#c0392b;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">Salvar</button>
+          <button onclick="document.getElementById('modalNovo').remove()" style="flex:1;padding:10px;background:#ccc;border:none;border-radius:6px;cursor:pointer;">Cancelar</button>
+        </div>
+      </div>`;
+  }
+
+  async function salvarNovo() {
+    const desc  = document.getElementById('n-desc').value.trim();
+    const valor = parseFloat(document.getElementById('n-valor').value);
+    const venc  = document.getElementById('n-venc').value;
+    if (!desc || !valor || !venc) { alert('Preencha os campos obrigatórios.'); return; }
+    const dados = {
+      fornecedor_id: document.getElementById('n-forn').value || null,
+      descricao: desc,
+      categoria: document.getElementById('n-cat').value,
+      valor, vencimento: venc,
+      observacoes: document.getElementById('n-obs').value,
+    };
+    const r = await api.post('/financeiro/pagar', dados);
+    if (r && r.ok) { document.getElementById('modalNovo').remove(); carregar(); }
+    else { const e = await r.json(); alert(e.erro||'Erro ao salvar'); }
+  }
+
+  window.addEventListener('DOMContentLoaded', carregar);
+</script>
+</body>
+</html>

@@ -1,74 +1,70 @@
-function searchTables() {
-  const input = document.getElementById('searchInput');
-  const filter = input.value.toLowerCase();
-  const table = document.getElementById('searchTable');
-  const tr = table.getElementsByTagName('tr');
+// ─────────────────────────────────────────────────────────────
+//  script.js  —  Utilitários globais
+// ─────────────────────────────────────────────────────────────
 
-  for (let i = 1; i < tr.length; i++) {
-      let td = tr[i].getElementsByTagName('td');
-      let found = false;
-      
-      for (let j = 0; j < td.length; j++) {
-          if (td[j].innerText.toLowerCase().includes(filter)) {
-              found = true;
-              break;
-          }
-      }
-      
-      if (found) {
-          tr[i].style.display = "";
-      } else {
-          tr[i].style.display = "none";
-      }
+function searchTables() {
+  const input  = document.getElementById('searchInput');
+  if (!input) return;
+  const filter = input.value.toLowerCase();
+  const table  = document.getElementById('searchTable');
+  if (!table) return;
+  const trs = table.getElementsByTagName('tr');
+
+  for (let i = 1; i < trs.length; i++) {
+    const tds   = trs[i].getElementsByTagName('td');
+    const match = Array.from(tds).some(td => td.innerText.toLowerCase().includes(filter));
+    trs[i].style.display = match ? '' : 'none';
   }
 }
 
 function loadSidebar() {
   fetch('sidebar.html')
-     .then(response => response.text())
-     .then(data => {
-      document.getElementById('sidebar-container').innerHTML = data;
-     });
-}
-
-function toggleSidebar() {
-  var sidebar = document.getElementById("mySidebar");
-  var main = document.getElementById("home");
-
-  if (sidebar.style.width === "250px") {
-      sidebar.style.width = "0";
-      main.style.marginLeft = "0";
-  } else {
-      sidebar.style.width ="250px";
-      main.style.marginLeft = "250px";
-  }
+    .then(r => r.text())
+    .then(html => {
+      document.getElementById('sidebar-container').innerHTML = html;
+      // Exibe nome do usuário logado
+      const u = (() => {
+        try { return JSON.parse(localStorage.getItem('versatto_usuario')); } catch { return null; }
+      })();
+      const el = document.getElementById('sidebar-usuario');
+      if (el && u) el.textContent = u.nome;
+    });
 }
 
 function loadFooter() {
   fetch('footer.html')
-     .then(response => response.text())
-     .then(data => {
-      document.getElementById('footer-container').innerHTML = data;
-     });
+    .then(r => r.text())
+    .then(html => { document.getElementById('footer-container').innerHTML = html; });
 }
 
-function addLoadEvent(func) { 
-  var oldonload = window.onload; 
-  if (typeof window.onload != 'function') { 
-    window.onload = func; 
-  } else { 
-    window.onload = function() { 
-      if (oldonload) { 
-        oldonload(); 
-      } 
-      func(); 
-    } 
-  } 
+function toggleSidebar() {
+  const sidebar = document.getElementById('mySidebar');
+  const main    = document.getElementById('home');
+  if (!sidebar) return;
+  if (sidebar.style.width === '250px') {
+    sidebar.style.width = '0';
+    if (main) main.style.marginLeft = '0';
+  } else {
+    sidebar.style.width = '250px';
+    if (main) main.style.marginLeft = '250px';
+  }
 }
 
+// Logout com limpeza de token
+function logout() {
+  localStorage.removeItem('versatto_token');
+  localStorage.removeItem('versatto_usuario');
+  window.location.href = 'login.html';
+}
 
-addLoadEvent(function() {
+// Carrega sidebar e footer ao inicializar
+window.addEventListener('DOMContentLoaded', () => {
   loadSidebar();
   loadFooter();
-  searchTables();  
+
+  // Substitui links de logout pelo handler real
+  document.querySelectorAll('[onclick*="login.html"]').forEach(el => {
+    el.removeAttribute('onclick');
+    el.addEventListener('click', e => { e.preventDefault(); logout(); });
+  });
 });
