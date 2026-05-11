@@ -40,7 +40,7 @@
   <script src="assets/js/api.js"></script>
   <script>
     // Se já estiver logado, vai direto para Home
-    if (localStorage.getItem('versatto_token')) {
+    if (localStorage.getItem('versatto_usuario')) {
       window.location.href = 'Home.html';
     }
 
@@ -66,8 +66,7 @@
         const data = await resp.json();
 
         if (resp.ok) {
-          localStorage.setItem('versatto_token',   data.token);
-          localStorage.setItem('versatto_usuario', JSON.stringify(data.usuario));
+          Auth.salvar(data.usuario, data.token);
           window.location.href = 'Home.html';
         } else {
           msg.textContent = data.erro || 'Credenciais inválidas.';

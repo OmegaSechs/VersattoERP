@@ -9,12 +9,14 @@ async function financeiroRoutes(fastify, opts) {
   // ── CONTAS A RECEBER ──────────────────────────────────────────
 
   fastify.get('/financeiro/receber', async (request, reply) => {
-    const { status, de, ate, os_id } = request.query;
+    const { status, de, ate, os_id, cliente_id, cliente_nome } = request.query;
     const where = []; const vals = [];
-    if (status) { vals.push(status);              where.push(`cr.status = $${vals.length}`); }
-    if (de)     { vals.push(de);                  where.push(`cr.vencimento >= $${vals.length}`); }
-    if (ate)    { vals.push(ate);                 where.push(`cr.vencimento <= $${vals.length}`); }
-    if (os_id)  { vals.push(apenasInteiro(os_id)); where.push(`cr.os_id = $${vals.length}`); }
+    if (status)       { vals.push(status);                        where.push(`cr.status = $${vals.length}`); }
+    if (de)           { vals.push(de);                            where.push(`cr.vencimento >= $${vals.length}`); }
+    if (ate)          { vals.push(ate);                           where.push(`cr.vencimento <= $${vals.length}`); }
+    if (os_id)        { vals.push(apenasInteiro(os_id));          where.push(`cr.os_id = $${vals.length}`); }
+    if (cliente_id)   { vals.push(apenasInteiro(cliente_id));     where.push(`p.pessoa_id = $${vals.length}`); }
+    if (cliente_nome) { vals.push(`%${cliente_nome.trim()}%`);   where.push(`p.nome ILIKE $${vals.length}`); }
     const wClause = where.length ? `WHERE ${where.join(' AND ')}` : '';
     try {
       const { rows } = await pool.query(`

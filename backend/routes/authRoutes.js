@@ -11,7 +11,18 @@ const SALT_ROUNDS = 10;
 async function authRoutes(fastify, opts) {
 
   // POST /auth/login
-  fastify.post('/auth/login', async (request, reply) => {
+  fastify.post('/auth/login', {
+    config: {
+      rateLimit: {
+        max: 5,
+        timeWindow: '1 minute',
+        errorResponseBuilder: (req, context) => ({
+          statusCode: 429,
+          erro: `Muitas tentativas. Aguarde ${Math.ceil(context.ttl / 1000)} segundos.`,
+        }),
+      },
+    },
+  }, async (request, reply) => {
     const { email, senha } = request.body || {};
 
     if (!email || !senha) {
@@ -41,14 +52,25 @@ async function authRoutes(fastify, opts) {
         { expiresIn: '8h' }
       );
 
-      reply.send({
-        token,
-        usuario: { id: usuario.id, nome: usuario.nome, email: usuario.email, perfil: usuario.perfil }
-      });
+      reply
+        .setCookie('versatto_jwt', token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'Lax',
+          path: '/',
+          maxAge: 8 * 60 * 60, // 8 horas em segundos
+        })
+        .send({ token, usuario: { id: usuario.id, nome: usuario.nome, email: usuario.email, perfil: usuario.perfil } });
     } catch (erro) {
-      console.error("🚨 ERRO NO BANCO:", erro.message);
-      reply.code(500).send({ erro: erro.message });
+      fastify.log.error(erro);
+      reply.code(500).send({ erro: 'Erro interno no servidor' });
     }
+  });
+
+  // POST /auth/logout
+  fastify.post('/auth/logout', async (request, reply) => {
+    reply.clearCookie('versatto_jwt', { path: '/' });
+    reply.send({ message: 'Logout realizado' });
   });
 
   // GET /auth/me  —  retorna dados do usuário logado

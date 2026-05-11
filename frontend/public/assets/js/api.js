@@ -5,21 +5,21 @@
 
 const API_BASE = 'http://localhost:5500';
 
-// Salva / recupera token no localStorage
 const Auth = {
-  salvar(token, usuario) {
-    localStorage.setItem('versatto_token',   token);
+  salvar(usuario, token) {
     localStorage.setItem('versatto_usuario', JSON.stringify(usuario));
+    if (token) localStorage.setItem('versatto_jwt', token);
   },
-  token()   { return localStorage.getItem('versatto_token'); },
+  token() { return localStorage.getItem('versatto_jwt'); },
   usuario() {
     try { return JSON.parse(localStorage.getItem('versatto_usuario')); }
     catch { return null; }
   },
-  logado()  { return !!this.token(); },
-  logout()  {
-    localStorage.removeItem('versatto_token');
+  logado() { return !!localStorage.getItem('versatto_usuario'); },
+  logout() {
+    fetch(`${API_BASE}/auth/logout`, { method: 'POST' }).catch(() => {});
     localStorage.removeItem('versatto_usuario');
+    localStorage.removeItem('versatto_jwt');
     window.location.href = 'login.html';
   },
 };
@@ -33,12 +33,12 @@ const Auth = {
   }
 })();
 
-// fetch autenticado — usa o token JWT em todas as requisições
+// fetch autenticado — envia JWT via header Authorization
 async function apiFetch(path, options = {}) {
   const token = Auth.token();
   const headers = {
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     ...(options.body !== undefined ? { 'Content-Type': 'application/json' } : {}),
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...(options.headers || {}),
   };
 

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Versatto ERP — Parâmetros da Empresa</title>
+    <link rel="stylesheet" href="assets/css/HeaderFooter.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        body { background: #F0F2F5; color: #2D3E50; }
+        .page {
+            display: grid;
+            grid-template-areas: "header header" "content content" "footer footer";
+            grid-template-rows: auto 1fr auto;
+            min-height: 100vh;
+        }
+        .form-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 28px 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.07);
+            max-width: 760px;
+        }
+        .form-card h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            margin: 0 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-group label {
+            font-size: .75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #7f8c8d;
+        }
+        .form-group input {
+            border: 1px solid #dde2e8;
+            border-radius: 6px;
+            padding: 9px 12px;
+            font-size: .93rem;
+            color: #2D3E50;
+            background: #fff;
+            transition: border-color .2s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498DB;
+        }
+        .form-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .btn-salvar {
+            background: #2D3E50;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 28px;
+            font-size: .93rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        .btn-salvar:hover { background: #34495E; }
+        .btn-salvar:disabled { opacity: .6; cursor: not-allowed; }
+        .msg {
+            font-size: .88rem;
+            font-weight: 600;
+            padding: 0;
+        }
+        .msg.ok    { color: #27AE60; }
+        .msg.erro  { color: #E74C3C; }
+        .acesso-negado {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            text-align: center;
+            color: #95a5a6;
+        }
+        .acesso-negado h2 { font-size: 1.2rem; color: #2D3E50; margin-bottom: 8px; }
+        .acesso-negado p  { font-size: .9rem; }
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .form-card { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+<main class="page">
+
+    <div id="sidebar-container" class="sidebar">
+        <button class="closebtn" onclick="toggleSidebar()">×</button>
+    </div>
+
+    <header class="header">
+        <button class="openbtn" onclick="toggleSidebar()">☰</button>
+        <h4>Parâmetros da Empresa</h4>
+        <img src="7124045_logout_icon.svg" alt="Logout" id="logout-icon"
+             onclick="logout()" style="cursor:pointer;width:30px;height:30px;">
+    </header>
+
+    <div class="content" id="conteudo-principal">
+        <p style="color:#bdc3c7;font-size:.9rem;">Carregando…</p>
+    </div>
+
+</main>
+<div id="footer-container"></div>
+
+<script src="assets/js/api.js"></script>
+<script src="assets/js/script.js"></script>
+<script>
+async function init() {
+    const usuario = Auth.usuario();
+
+    // Somente admins podem acessar
+    if (!usuario || usuario.perfil !== 'admin') {
+        document.getElementById('conteudo-principal').innerHTML = `
+            <div class="acesso-negado">
+                <h2>Acesso restrito</h2>
+                <p>Esta tela é acessível somente para administradores.</p>
+            </div>`;
+        return;
+    }
+
+    // Busca dados atuais
+    let dados = {};
+    try {
+        const r = await api.get('/parametros');
+        if (r.ok) dados = await r.json();
+    } catch {}
+
+    const val = f => dados[f] || '';
+
+    document.getElementById('conteudo-principal').innerHTML = `
+        <div class="form-card">
+            <h2>Dados da Empresa</h2>
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>Nome da Empresa</label>
+                    <input id="nome_empresa" type="text" maxlength="200" value="${escHtml(val('nome_empresa'))}" placeholder="Ex.: Oficina do João">
+                </div>
+                <div class="form-group full">
+                    <label>Slogan / Descrição</label>
+                    <input id="slogan" type="text" maxlength="300" value="${escHtml(val('slogan'))}" placeholder="Ex.: Qualidade e confiança em cada serviço">
+                </div>
+                <div class="form-group">
+                    <label>CNPJ</label>
+                    <input id="cnpj" type="text" maxlength="20" value="${escHtml(val('cnpj'))}" placeholder="00.000.000/0000-00">
+                </div>
+                <div class="form-group">
+                    <label>Telefone / WhatsApp</label>
+                    <input id="telefone" type="text" maxlength="30" value="${escHtml(val('telefone'))}" placeholder="(00) 00000-0000">
+                </div>
+                <div class="form-group full">
+                    <label>E-mail da Empresa</label>
+                    <input id="email_empresa" type="email" maxlength="150" value="${escHtml(val('email_empresa'))}" placeholder="contato@minhaoficina.com.br">
+                </div>
+                <div class="form-group full">
+                    <label>Endereço</label>
+                    <input id="endereco" type="text" maxlength="300" value="${escHtml(val('endereco'))}" placeholder="Rua, número, bairro">
+                </div>
+                <div class="form-group">
+                    <label>Cidade</label>
+                    <input id="cidade" type="text" maxlength="100" value="${escHtml(val('cidade'))}" placeholder="São Paulo">
+                </div>
+                <div class="form-group">
+                    <label>Estado (UF)</label>
+                    <input id="estado" type="text" maxlength="2" value="${escHtml(val('estado'))}" placeholder="SP" style="text-transform:uppercase;">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn-salvar" id="btn-salvar" onclick="salvar()">Salvar Alterações</button>
+                <span class="msg" id="msg-feedback"></span>
+            </div>
+        </div>`;
+}
+
+function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function campo(id) {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : null;
+}
+
+async function salvar() {
+    const btn = document.getElementById('btn-salvar');
+    const msg = document.getElementById('msg-feedback');
+    btn.disabled = true;
+    msg.textContent = '';
+    msg.className = 'msg';
+
+    const body = {
+        nome_empresa:  campo('nome_empresa')  || undefined,
+        slogan:        campo('slogan')         !== null ? campo('slogan')         : undefined,
+        cnpj:          campo('cnpj')           !== null ? campo('cnpj')           : undefined,
+        telefone:      campo('telefone')       !== null ? campo('telefone')       : undefined,
+        email_empresa: campo('email_empresa')  !== null ? campo('email_empresa')  : undefined,
+        endereco:      campo('endereco')       !== null ? campo('endereco')       : undefined,
+        cidade:        campo('cidade')         !== null ? campo('cidade')         : undefined,
+        estado:        campo('estado')         !== null ? campo('estado').toUpperCase() : undefined,
+    };
+
+    if (!body.nome_empresa) {
+        msg.textContent = 'O nome da empresa é obrigatório.';
+        msg.className = 'msg erro';
+        btn.disabled = false;
+        return;
+    }
+
+    try {
+        const r = await api.put('/parametros', body);
+        if (r.ok) {
+            msg.textContent = 'Salvo com sucesso!';
+            msg.className = 'msg ok';
+        } else {
+            const d = await r.json();
+            msg.textContent = d.erro || 'Erro ao salvar.';
+            msg.className = 'msg erro';
+        }
+    } catch {
+        msg.textContent = 'Erro de conexão.';
+        msg.className = 'msg erro';
+    } finally {
+        btn.disabled = false;
+        setTimeout(() => { if (msg) msg.textContent = ''; }, 4000);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

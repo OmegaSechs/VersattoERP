@@ -52,9 +52,9 @@ CREATE TABLE IF NOT EXISTS catalogo_itens (
     preco_custo        NUMERIC(12,2),
     unidade_medida     VARCHAR(20),
     descricao          TEXT,
-    quantidade_minima  INTEGER DEFAULT 0,
-    quantidade_maxima  INTEGER DEFAULT 0,
-    quantidade_estoque INTEGER DEFAULT 0,
+    quantidade_minima  NUMERIC(10,2) DEFAULT 0,
+    quantidade_maxima  NUMERIC(10,2) DEFAULT 0,
+    quantidade_estoque NUMERIC(10,2) DEFAULT 0,
     criado_em          TIMESTAMP DEFAULT NOW(),
     atualizado_em      TIMESTAMP DEFAULT NOW()
 );
@@ -100,7 +100,48 @@ CREATE TABLE IF NOT EXISTS usuarios (
     criado_em  TIMESTAMP DEFAULT NOW()
 );
 
--- ── Migrações seguras (tabelas que já podem existir) ──────────────────────────
+-- Contas a Receber
+CREATE TABLE IF NOT EXISTS contas_receber (
+    id             SERIAL PRIMARY KEY,
+    os_id          INTEGER REFERENCES ordem_servico(os_id) ON DELETE CASCADE,
+    descricao      VARCHAR(200) NOT NULL,
+    valor          NUMERIC(12,2) NOT NULL,
+    vencimento     DATE NOT NULL,
+    status         VARCHAR(20) DEFAULT 'pendente',  -- pendente | pago | cancelado
+    data_pagamento DATE,
+    observacoes    TEXT,
+    criado_em      TIMESTAMP DEFAULT NOW()
+);
+
+-- Contas a Pagar
+CREATE TABLE IF NOT EXISTS contas_pagar (
+    id             SERIAL PRIMARY KEY,
+    fornecedor_id  INTEGER REFERENCES pessoas(pessoa_id) ON DELETE SET NULL,
+    descricao      VARCHAR(200) NOT NULL,
+    categoria      VARCHAR(100),
+    valor          NUMERIC(12,2) NOT NULL,
+    vencimento     DATE NOT NULL,
+    status         VARCHAR(20) DEFAULT 'pendente',  -- pendente | pago | cancelado
+    data_pagamento DATE,
+    observacoes    TEXT,
+    criado_em      TIMESTAMP DEFAULT NOW()
+);
+
+-- Parâmetros da empresa (singleton — sempre id = 1)
+CREATE TABLE IF NOT EXISTS parametros_empresa (
+    id              INTEGER PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    nome_empresa    VARCHAR(200) NOT NULL DEFAULT 'Minha Oficina',
+    slogan          VARCHAR(300) DEFAULT '',
+    cnpj            VARCHAR(20)  DEFAULT '',
+    telefone        VARCHAR(30)  DEFAULT '',
+    email_empresa   VARCHAR(150) DEFAULT '',
+    endereco        VARCHAR(300) DEFAULT '',
+    cidade          VARCHAR(100) DEFAULT '',
+    estado          VARCHAR(2)   DEFAULT '',
+    atualizado_em   TIMESTAMP    DEFAULT NOW()
+);
+
+-- ── Ajustes retrocompatíveis (seguro re-executar em banco existente) ──────────
 
 DO $$ BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns
@@ -123,10 +164,27 @@ DO $$ BEGIN
     END IF;
 END $$;
 
+-- Converte colunas de estoque de INTEGER para NUMERIC(10,2) se ainda forem inteiras
+DO $$ BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.columns
+               WHERE table_name='catalogo_itens' AND column_name='quantidade_estoque'
+                 AND data_type='integer') THEN
+        ALTER TABLE catalogo_itens
+            ALTER COLUMN quantidade_estoque TYPE NUMERIC(10,2),
+            ALTER COLUMN quantidade_minima  TYPE NUMERIC(10,2),
+            ALTER COLUMN quantidade_maxima  TYPE NUMERIC(10,2);
+    END IF;
+END $$;
+
+-- ── Dados iniciais ────────────────────────────────────────────────────────────
+
 -- Usuário admin padrão (senha: admin123) — troque após o primeiro acesso
--- Hash gerado com bcrypt rounds=10
 INSERT INTO usuarios (nome, email, senha_hash, perfil)
 SELECT 'Administrador', 'admin@versatto.com',
        '$2b$10$EJHDnVsHH75wuFKCUhuQfeCmcCArgb0mMF.ePp///jJ/J394ROBG2',
        'admin'
 WHERE NOT EXISTS (SELECT 1 FROM usuarios WHERE email = 'admin@versatto.com');
+
+-- Registro de parâmetros da empresa
+INSERT INTO parametros_empresa (id) VALUES (1)
+ON CONFLICT (id) DO NOTHING;

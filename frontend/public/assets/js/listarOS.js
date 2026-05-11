@@ -47,6 +47,7 @@ async function excluirOS(id) {
 }
 
 let itensEdicaoOS = [];
+let parcelasConversaoOS = [];
 
 function renderItensEdicao() {
   const tbody = document.getElementById('itens-edicao-tbody');
@@ -148,6 +149,7 @@ async function abrirModalEdicaoOS(id) {
     const os = await r.json();
     if (os.erro) { alert('OS não encontrada.'); return; }
 
+    parcelasConversaoOS = [];
     itensEdicaoOS = (os.itens || []).map(it => ({
       catalogo_id: it.catalogo_id,
       nome: it.nome,
@@ -191,7 +193,7 @@ async function abrirModalEdicaoOS(id) {
             <div style="flex:1;min-width:130px;"><label>Hora Saída</label><br>
               <input id="os_hr_s" type="time" value="${os.os_hr_saida||''}" style="width:100%;padding:8px;margin-top:4px;border:1px solid #ccc;border-radius:4px;"></div>
             <div style="flex:1;min-width:180px;"><label>Tipo</label><br>
-              <select id="os_tipo" style="width:100%;padding:8px;margin-top:4px;border:1px solid #ccc;border-radius:4px;">
+              <select id="os_tipo" data-original-tipo="${os.tipo}" onchange="onTipoChangeEdicao(this.value)" style="width:100%;padding:8px;margin-top:4px;border:1px solid #ccc;border-radius:4px;">
                 <option value="orcamento" ${sel('orcamento',os.tipo)}>Orçamento</option>
                 <option value="ordem_servico" ${sel('ordem_servico',os.tipo)}>Ordem de Serviço</option>
               </select></div>
@@ -234,6 +236,22 @@ async function abrirModalEdicaoOS(id) {
             <div id="parcelas-os-lista">Carregando…</div>
           </div>` : ''}
 
+          <div id="sec-parcelamento-conversao" style="display:none;margin-top:20px;border:1px solid #ccc;border-radius:6px;padding:16px;background:#fafafa;">
+            <strong style="color:#2D3E50;">Parcelamento</strong>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;margin-top:8px;">
+              <div>
+                <label style="display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:4px;">Nº de Parcelas</label>
+                <input type="number" id="conv-parc-qtd" min="1" max="36" value="1" style="width:90px;padding:8px;border:1px solid #ccc;border-radius:4px;">
+              </div>
+              <div>
+                <label style="display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:4px;">Primeiro Vencimento</label>
+                <input type="date" id="conv-parc-venc1" style="padding:8px;border:1px solid #ccc;border-radius:4px;">
+              </div>
+              <button type="button" onclick="gerarParcelasConversao()" style="padding:9px 18px;background:#2D3E50;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">Gerar</button>
+            </div>
+            <div id="conv-parcelas-preview" style="margin-top:12px;"></div>
+          </div>
+
           <div style="display:flex;gap:12px;margin-top:20px;">
             <button type="submit" style="flex:1;padding:10px;background:#2D3E50;color:#fff;border:none;border-radius:6px;cursor:pointer;">Salvar</button>
             <button type="button" onclick="document.getElementById('modalEdicaoOS').remove()" style="flex:1;padding:10px;background:#ccc;border:none;border-radius:6px;cursor:pointer;">Cancelar</button>
@@ -263,11 +281,13 @@ async function abrirModalEdicaoOS(id) {
         status:        document.getElementById('os_status').value,
         observacoes:   document.getElementById('os_obs').value,
         itens:         itensEdicaoOS,
+        parcelas:      parcelasConversaoOS,
       };
       try {
         const resp = await api.put(`/ordens-servico/${id}`, dados);
         if (resp.ok) {
           alert('OS atualizada!');
+          parcelasConversaoOS = [];
           document.getElementById('modalEdicaoOS').remove();
           await carregarOS();
         } else {
@@ -369,6 +389,63 @@ function abrirModalNovaParcelaOS(osId) {
         <button onclick="document.getElementById('modalNovaParcelaOS').remove()" style="flex:1;padding:10px;background:#ccc;border:none;border-radius:6px;cursor:pointer;">Cancelar</button>
       </div>
     </div>`;
+}
+
+function onTipoChangeEdicao(val) {
+  const originalTipo = document.getElementById('os_tipo').dataset.originalTipo;
+  const sec = document.getElementById('sec-parcelamento-conversao');
+  if (!sec) return;
+  if (val === 'ordem_servico' && originalTipo === 'orcamento') {
+    sec.style.display = 'block';
+  } else {
+    sec.style.display = 'none';
+    parcelasConversaoOS = [];
+    const preview = document.getElementById('conv-parcelas-preview');
+    if (preview) preview.innerHTML = '';
+  }
+}
+
+function gerarParcelasConversao() {
+  const qtd   = Math.max(1, parseInt(document.getElementById('conv-parc-qtd').value) || 1);
+  const venc1 = document.getElementById('conv-parc-venc1').value;
+  if (!venc1) { alert('Informe a data do primeiro vencimento.'); return; }
+
+  const total = itensEdicaoOS.reduce((acc, it) => acc + Number(it.quantidade) * Number(it.valor_unitario), 0);
+  if (total <= 0) { alert('Adicione itens com valor antes de gerar parcelas.'); return; }
+
+  const valorBase = parseFloat((total / qtd).toFixed(2));
+  parcelasConversaoOS = [];
+
+  const [ano, mes, dia] = venc1.split('-').map(Number);
+  for (let i = 0; i < qtd; i++) {
+    const d = new Date(ano, mes - 1 + i, dia);
+    const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const valor = i === qtd - 1
+      ? parseFloat((total - valorBase * (qtd - 1)).toFixed(2))
+      : valorBase;
+    parcelasConversaoOS.push({ descricao: `Parcela ${i+1}/${qtd}`, valor, vencimento: dateStr });
+  }
+
+  const div = document.getElementById('conv-parcelas-preview');
+  div.innerHTML = '';
+  const table = document.createElement('table');
+  table.style.cssText = 'width:100%;border-collapse:collapse;font-size:13px;margin-top:4px;';
+  table.innerHTML = `<thead><tr style="background:#e8ecf0;">
+    <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;">Parcela</th>
+    <th style="padding:7px 10px;border:1px solid #ddd;">Vencimento</th>
+    <th style="padding:7px 10px;border:1px solid #ddd;text-align:right;">Valor</th>
+  </tr></thead><tbody></tbody>`;
+  const tbody = table.querySelector('tbody');
+  parcelasConversaoOS.forEach((p, i) => {
+    const [y, m, d2] = p.vencimento.split('-');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="padding:7px 10px;border:1px solid #ddd;">${i+1}/${qtd}</td>
+      <td style="padding:7px 10px;border:1px solid #ddd;text-align:center;">${d2}/${m}/${y}</td>
+      <td style="padding:7px 10px;border:1px solid #ddd;text-align:right;">R$ ${p.valor.toFixed(2)}</td>`;
+    tbody.appendChild(tr);
+  });
+  div.appendChild(table);
 }
 
 async function salvarNovaParcelaOS(osId) {

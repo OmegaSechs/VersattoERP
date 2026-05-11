@@ -22,8 +22,10 @@
     .btn { padding: 8px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
     .btn-buscar  { background: #2D3E50; color: #fff; }
     .btn-novo    { background: #27ae60; color: #fff; }
+    .btn-limpar  { background: #95a5a6; color: #fff; }
     .btn-buscar:hover { background: #1a2a38; }
     .btn-novo:hover   { background: #1e8449; }
+    .btn-limpar:hover { background: #7f8c8d; }
 
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 14px; margin-bottom: 20px; }
     .card { background: #fff; border-radius: 8px; padding: 16px 20px; box-shadow: 0 2px 8px rgba(0,0,0,.12); text-align: center; }
@@ -67,6 +69,14 @@
 
     <div class="filtros">
       <div>
+        <label>Cliente (nome ou código)</label>
+        <input type="text" id="f-cliente" placeholder="Nome ou nº do cliente" style="width:200px;">
+      </div>
+      <div>
+        <label>Nº OS</label>
+        <input type="number" id="f-os" placeholder="Ex: 42" style="width:110px;" min="1">
+      </div>
+      <div>
         <label>Status</label>
         <select id="f-status">
           <option value="">Todos</option>
@@ -84,6 +94,7 @@
         <input type="date" id="f-ate">
       </div>
       <button class="btn btn-buscar" onclick="carregar()">🔍 Buscar</button>
+      <button class="btn btn-limpar" onclick="limparFiltros()">Limpar</button>
       <button class="btn btn-novo" onclick="abrirModalNovo()">+ Nova Conta</button>
     </div>
 
@@ -132,14 +143,32 @@
   const fmtDate = s => { if (!s) return '—'; const [y,m,d] = String(s).split('T')[0].split('-'); return `${d}/${m}/${y}`; };
   const hoje = new Date().toISOString().split('T')[0];
 
+  function limparFiltros() {
+    document.getElementById('f-cliente').value = '';
+    document.getElementById('f-os').value      = '';
+    document.getElementById('f-status').value  = '';
+    document.getElementById('f-de').value      = '';
+    document.getElementById('f-ate').value     = '';
+    carregar();
+  }
+
   async function carregar() {
-    const status = document.getElementById('f-status').value;
-    const de     = document.getElementById('f-de').value;
-    const ate    = document.getElementById('f-ate').value;
-    let url = '/financeiro/receber?';
-    if (status) url += `status=${status}&`;
-    if (de)     url += `de=${de}&`;
-    if (ate)    url += `ate=${ate}`;
+    const clienteRaw = document.getElementById('f-cliente').value.trim();
+    const osId       = document.getElementById('f-os').value.trim();
+    const status     = document.getElementById('f-status').value;
+    const de         = document.getElementById('f-de').value;
+    const ate        = document.getElementById('f-ate').value;
+
+    const params = new URLSearchParams();
+    if (status) params.set('status', status);
+    if (de)     params.set('de', de);
+    if (ate)    params.set('ate', ate);
+    if (osId)   params.set('os_id', osId);
+    if (clienteRaw) {
+      if (/^\d+$/.test(clienteRaw)) params.set('cliente_id', clienteRaw);
+      else                           params.set('cliente_nome', clienteRaw);
+    }
+    const url = `/financeiro/receber?${params.toString()}`;
 
     const tbody = document.getElementById('tabela-corpo');
     tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;">Carregando…</td></tr>';
@@ -247,7 +276,12 @@
     else { const e = await r.json(); alert(e.erro||'Erro ao salvar'); }
   }
 
-  window.addEventListener('DOMContentLoaded', carregar);
+  window.addEventListener('DOMContentLoaded', () => {
+    carregar();
+    ['f-cliente','f-os'].forEach(id => {
+      document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') carregar(); });
+    });
+  });
 </script>
 </body>
 </html>

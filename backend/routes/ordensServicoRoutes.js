@@ -114,7 +114,7 @@ async function ordensServicoRoutes(fastify, opts) {
         if (cat_id) {
           await client.query(`
             UPDATE catalogo_itens
-            SET quantidade_estoque = GREATEST(0, quantidade_estoque - $1),
+            SET quantidade_estoque = GREATEST(0, quantidade_estoque - $1::NUMERIC),
                 atualizado_em = NOW()
             WHERE id = $2 AND tipo IN (2, 3)`,
             [qtd, cat_id]
@@ -153,7 +153,8 @@ async function ordensServicoRoutes(fastify, opts) {
       cliente_id, veiculo_id, veiculo, placa,
       os_dt_entrada, os_dt_saida, os_hr_entrada, os_hr_saida,
       tipo, status, observacoes,
-      itens   // se enviado, substitui itens anteriores
+      itens,    // se enviado, substitui itens anteriores
+      parcelas = [],
     } = body;
 
     const client = await pool.connect();
@@ -169,7 +170,7 @@ async function ordensServicoRoutes(fastify, opts) {
           if (it.catalogo_id) {
             await client.query(`
               UPDATE catalogo_itens
-              SET quantidade_estoque = quantidade_estoque + $1, atualizado_em = NOW()
+              SET quantidade_estoque = quantidade_estoque + $1::NUMERIC, atualizado_em = NOW()
               WHERE id = $2 AND tipo IN (2, 3)`,
               [it.quantidade, it.catalogo_id]
             );
@@ -197,7 +198,7 @@ async function ordensServicoRoutes(fastify, opts) {
           if (cat_id) {
             await client.query(`
               UPDATE catalogo_itens
-              SET quantidade_estoque = GREATEST(0, quantidade_estoque - $1), atualizado_em = NOW()
+              SET quantidade_estoque = GREATEST(0, quantidade_estoque - $1::NUMERIC), atualizado_em = NOW()
               WHERE id = $2 AND tipo IN (2, 3)`,
               [qtd, cat_id]
             );
@@ -239,6 +240,17 @@ async function ordensServicoRoutes(fastify, opts) {
         );
       }
 
+      // Cria parcelas ao converter orcamento em ordem_servico
+      if (sanitizarString(tipo, 50) === 'ordem_servico' && Array.isArray(parcelas) && parcelas.length > 0) {
+        for (const parc of parcelas) {
+          await client.query(`
+            INSERT INTO contas_receber (os_id, descricao, valor, vencimento, status)
+            VALUES ($1, $2, $3, $4, 'pendente')`,
+            [id, sanitizarString(parc.descricao, 200),
+             apenasDecimal(parc.valor), validarData(parc.vencimento)]);
+        }
+      }
+
       await client.query('COMMIT');
       reply.send({ message: 'OS atualizada com sucesso' });
     } catch (erro) {
@@ -265,7 +277,7 @@ async function ordensServicoRoutes(fastify, opts) {
         if (it.catalogo_id) {
           await client.query(`
             UPDATE catalogo_itens
-            SET quantidade_estoque = quantidade_estoque + $1, atualizado_em = NOW()
+            SET quantidade_estoque = quantidade_estoque + $1::NUMERIC, atualizado_em = NOW()
             WHERE id = $2 AND tipo IN (2, 3)`,
             [it.quantidade, it.catalogo_id]
           );

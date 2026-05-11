@@ -22,12 +22,16 @@ function loadSidebar() {
     .then(r => r.text())
     .then(html => {
       document.getElementById('sidebar-container').innerHTML = html;
-      // Exibe nome do usuário logado
-      const u = (() => {
-        try { return JSON.parse(localStorage.getItem('versatto_usuario')); } catch { return null; }
-      })();
+      const u = Auth.usuario();
       const el = document.getElementById('sidebar-usuario');
       if (el && u) el.textContent = u.nome;
+
+      // Oculta links exclusivos de admin para não-admins
+      if (!u || u.perfil !== 'admin') {
+        document.querySelectorAll('[data-admin]').forEach(link => {
+          link.style.display = 'none';
+        });
+      }
     });
 }
 
@@ -50,11 +54,9 @@ function toggleSidebar() {
   }
 }
 
-// Logout com limpeza de token
+// Logout — delega ao Auth que limpa cookie e localStorage
 function logout() {
-  localStorage.removeItem('versatto_token');
-  localStorage.removeItem('versatto_usuario');
-  window.location.href = 'login.html';
+  Auth.logout();
 }
 
 // Carrega sidebar e footer ao inicializar

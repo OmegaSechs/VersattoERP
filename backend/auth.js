@@ -7,8 +7,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'versatto_secret_mude_em_producao';
 
 // Rotas que NÃO precisam de token
 const PUBLIC_ROUTES = [
-  { method: 'POST', url: '/auth/login' },
-  { method: 'GET',  url: '/'           },
+  { method: 'POST', url: '/auth/login'  },
+  { method: 'POST', url: '/auth/logout' },
+  { method: 'GET',  url: '/'            },
 ];
 
 function isPublic(method, url) {
@@ -22,9 +23,11 @@ async function verificarToken(request, reply) {
   const { method, url } = request;
   if (isPublic(method, url)) return;           // rota pública — passa direto
 
-  // Aceita token no header Authorization: Bearer <token>
-  const authHeader = request.headers['authorization'] || '';
-  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  // Lê o token do header Authorization (Bearer) ou do cookie httpOnly
+  const authHeader = request.headers.authorization;
+  const token = (authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null)
+    || request.cookies?.versatto_jwt
+    || null;
 
   if (!token) {
     return reply.code(401).send({ erro: 'Token não informado' });
@@ -39,11 +42,10 @@ async function verificarToken(request, reply) {
 }
 
 // Valida que o usuário tem perfil de admin
-function requerAdmin(request, reply, done) {
+async function requerAdmin(request, reply) {
   if (request.usuario?.perfil !== 'admin') {
     return reply.code(403).send({ erro: 'Acesso restrito a administradores' });
   }
-  done();
 }
 
 module.exports = { verificarToken, requerAdmin, JWT_SECRET };

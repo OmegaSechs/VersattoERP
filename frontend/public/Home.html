@@ -3,77 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Versatto ERP</title>
+    <title>Versatto ERP — Dashboard</title>
     <link rel="stylesheet" href="assets/css/Home.css">
     <link rel="stylesheet" href="assets/css/HeaderFooter.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
-<body class="background">
-    <main class="page">
-        
-        <div id="sidebar-container" class="sidebar">
-            <button class="closebtn" onclick="toggleSidebar()">×</button>
-        </div>
+<body>
+<main class="page">
 
-        <header class="header">
-            <button class="openbtn" onclick="toggleSidebar()">☰</button>
-            <h4>Dashboards</h4>
-      
-            <img 
-                src="7124045_logout_icon.svg" 
-                alt="Logout" 
-                id="logout-icon" 
-                onclick="window.location.href='login.html'" 
-                style="cursor: pointer; width: 30px; height: 30px;">
-        </header>
-        
-        <style>
-            
-        </style>
-        
+    <div id="sidebar-container" class="sidebar">
+        <button class="closebtn" onclick="toggleSidebar()">×</button>
+    </div>
 
-        <div class="content">
-            <article>
-                <h1>Nome da Sua Empresa</h1>
-                <p>Slogan da Sua Empresa</p>
-                <br><br>
-            </article>
+    <header class="header">
+        <button class="openbtn" onclick="toggleSidebar()">☰</button>
+        <h4 id="header-titulo">Dashboard</h4>
+        <img src="7124045_logout_icon.svg" alt="Logout" id="logout-icon"
+             onclick="logout()" style="cursor:pointer;width:30px;height:30px;">
+    </header>
 
-            <div class="graficos">
-                <div class="pizza-1">
-                    <h1>Grafico 1</h1>
-                    <div class="grafico-1"></div>
-                    <div class="legenda-1">
-                        <div><span class="verde"></span>Categoria A</div>
-                        <div><span class="amarelo"></span>Categoria B</div>
-                        <div><span class="vermelho"></span>Categoria C</div>
-                    </div>
-                </div>
-                <div class="pizza-2">
-                    <h1>Grafico 2</h1>
-                    <div class="grafico-2"></div>
-                    <div class="legenda-2">
-                        <div><span class="verde"></span>Categoria A</div>
-                        <div><span class="amarelo"></span>Categoria B</div>
-                        <div><span class="vermelho"></span>Categoria C</div>
-                    </div>
-                </div>
-                <div class="pizza-3">
-                    <h1>Grafico 3</h1>
-                    <div class="grafico-3"></div>
-                    <div class="legenda-3">
-                        <div><span class="verde"></span>Categoria A</div>
-                        <div><span class="amarelo"></span>Categoria B</div>
-                        <div><span class="vermelho"></span>Categoria C</div>
-                    </div>
-                </div>
+    <div class="content">
+
+        <!-- Banner da empresa -->
+        <div class="empresa-header">
+            <div class="empresa-info">
+                <h1 id="nome-empresa">—</h1>
+                <p class="slogan" id="slogan-empresa"></p>
+            </div>
+            <div class="data-hora">
+                <div class="hora" id="relogio">--:--</div>
+                <div class="data" id="data-hoje"></div>
             </div>
         </div>
-        <br><br><br>
-        
-    </main>
-    <script src="assets/js/api.js"></script>
-    <script src="assets/js/script.js"></script>  
-</body>
+
+        <!-- KPI cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card azul">
+                <span class="kpi-label">OS em Aberto</span>
+                <span class="kpi-valor" id="kpi-os">—</span>
+                <span class="kpi-sub" id="kpi-os-sub">aguardando atendimento</span>
+            </div>
+            <div class="kpi-card verde">
+                <span class="kpi-label">Faturamento do Mês</span>
+                <span class="kpi-valor" id="kpi-fat">—</span>
+                <span class="kpi-sub" id="kpi-fat-sub">mês atual (concluídas)</span>
+            </div>
+            <div class="kpi-card vermelho">
+                <span class="kpi-label">A Receber Vencido</span>
+                <span class="kpi-valor" id="kpi-vencido">—</span>
+                <span class="kpi-sub" id="kpi-vencido-sub">contas em atraso</span>
+            </div>
+            <div class="kpi-card roxo">
+                <span class="kpi-label">Estoque Crítico</span>
+                <span class="kpi-valor" id="kpi-estoque">—</span>
+                <span class="kpi-sub">itens abaixo do mínimo</span>
+            </div>
+        </div>
+
+        <!-- Detalhes -->
+        <div class="dashboard-grid">
+            <div class="card">
+                <p class="card-title">Ordens de Serviço em Aberto</p>
+                <div id="os-container"><p class="loading">Carregando…</p></div>
+            </div>
+            <div class="card">
+                <p class="card-title">Alertas de Estoque</p>
+                <div id="estoque-container"><p class="loading">Carregando…</p></div>
+            </div>
+        </div>
+
+    </div>
+
+</main>
 <div id="footer-container"></div>
+
+<script src="assets/js/api.js"></script>
+<script src="assets/js/script.js"></script>
+<script>
+const R$ = v => Number(v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+// Relógio em tempo real
+function atualizarRelogio() {
+    const agora = new Date();
+    document.getElementById('relogio').textContent =
+        agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('data-hoje').textContent =
+        agora.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+}
+atualizarRelogio();
+setInterval(atualizarRelogio, 30000);
+
+// Retorna {de, ate} com o primeiro e último dia do mês atual
+function intervaloPrimeiroDia() {
+    const hoje = new Date();
+    const y = hoje.getFullYear();
+    const m = hoje.getMonth();
+    const ultimo = new Date(y, m + 1, 0).getDate();
+    const pad = n => String(n).padStart(2, '0');
+    return { de: `${y}-${pad(m + 1)}-01`, ate: `${y}-${pad(m + 1)}-${pad(ultimo)}` };
+}
+
+// Formata data "YYYY-MM-DD" para "DD/MM/YYYY" sem problema de fuso
+function fmtData(str) {
+    if (!str) return '—';
+    const [y, m, d] = str.split('T')[0].split('-');
+    return `${d}/${m}/${y}`;
+}
+
+async function carregarDashboard() {
+    // 1. Parâmetros da empresa
+    try {
+        const r = await api.get('/parametros');
+        if (r.ok) {
+            const p = await r.json();
+            document.getElementById('nome-empresa').textContent   = p.nome_empresa || 'Versatto ERP';
+            document.getElementById('slogan-empresa').textContent = p.slogan || '';
+            document.getElementById('header-titulo').textContent  = p.nome_empresa || 'Dashboard';
+        }
+    } catch {}
+
+    // 2. OS em aberto
+    try {
+        const r = await api.get('/relatorios/os-abertas');
+        if (r.ok) {
+            const lista = await r.json();
+            document.getElementById('kpi-os').textContent = lista.length;
+            const emAndamento = lista.filter(o => o.status === 'em_andamento').length;
+            document.getElementById('kpi-os-sub').textContent =
+                `${emAndamento} em andamento · ${lista.length - emAndamento} aguardando`;
+            renderizarOS(lista);
+        }
+    } catch {
+        document.getElementById('kpi-os').textContent = '—';
+        document.getElementById('os-container').innerHTML = '<p class="empty-state">Erro ao carregar OS.</p>';
+    }
+
+    // 3. Faturamento do mês
+    try {
+        const { de, ate } = intervaloPrimeiroDia();
+        const r = await api.get(`/relatorios/faturamento?de=${de}&ate=${ate}&status=concluida`);
+        if (r.ok) {
+            const d = await r.json();
+            document.getElementById('kpi-fat').textContent   = R$(d.resumo.faturamento_bruto);
+            document.getElementById('kpi-fat-sub').textContent = `${d.resumo.total_os} OS concluída(s) no mês`;
+        }
+    } catch {
+        document.getElementById('kpi-fat').textContent = '—';
+    }
+
+    // 4. Contas a receber vencidas
+    try {
+        const r = await api.get('/financeiro/relatorio');
+        if (r.ok) {
+            const d = await r.json();
+            const venc = d.vencidos_receber || {};
+            document.getElementById('kpi-vencido').textContent      = R$(venc.total);
+            document.getElementById('kpi-vencido-sub').textContent  = `${venc.qty || 0} conta(s) vencida(s)`;
+        }
+    } catch {
+        document.getElementById('kpi-vencido').textContent = '—';
+    }
+
+    // 5. Estoque crítico
+    try {
+        const r = await api.get('/relatorios/estoque');
+        if (r.ok) {
+            const d = await r.json();
+            document.getElementById('kpi-estoque').textContent = d.resumo.abaixo_minimo;
+            renderizarEstoque(d.alertas);
+        }
+    } catch {
+        document.getElementById('kpi-estoque').textContent = '—';
+        document.getElementById('estoque-container').innerHTML = '<p class="empty-state">Erro ao carregar estoque.</p>';
+    }
+}
+
+function renderizarOS(lista) {
+    const el = document.getElementById('os-container');
+    if (!lista.length) {
+        el.innerHTML = '<p class="empty-state">Nenhuma OS em aberto no momento.</p>';
+        return;
+    }
+    const labelStatus = { aberta: 'Aberta', em_andamento: 'Em andamento' };
+    const classStatus = { aberta: 'badge-aberta', em_andamento: 'badge-andamento' };
+    const rows = lista.slice(0, 8).map(o => `
+        <tr>
+            <td><strong>#${o.os_id}</strong></td>
+            <td>${o.cliente_nome || '—'}</td>
+            <td>${o.placa || o.veiculo || '—'}</td>
+            <td><span class="badge ${classStatus[o.status] || ''}">${labelStatus[o.status] || o.status}</span></td>
+            <td>${fmtData(o.os_dt_entrada)}</td>
+        </tr>`).join('');
+    el.innerHTML = `
+        <table class="mini-table">
+            <thead>
+                <tr>
+                    <th>#OS</th>
+                    <th>Cliente</th>
+                    <th>Placa / Veículo</th>
+                    <th>Status</th>
+                    <th>Entrada</th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>
+        ${lista.length > 8 ? `<p style="font-size:.78rem;color:#95a5a6;margin-top:10px;text-align:right;">+${lista.length - 8} OS não exibida(s) — <a href="listaOS.html" style="color:#3498DB;">ver todas</a></p>` : ''}`;
+}
+
+function renderizarEstoque(alertas) {
+    const el = document.getElementById('estoque-container');
+    if (!alertas || !alertas.length) {
+        el.innerHTML = '<p class="empty-state">Nenhum alerta de estoque.</p>';
+        return;
+    }
+    const items = alertas.slice(0, 9).map(i => {
+        const cls  = i.situacao === 'zerado' ? 'stock-zerado' : 'stock-baixo';
+        const rotulo = i.situacao === 'zerado'
+            ? 'Zerado'
+            : `${Number(i.quantidade_estoque)} ${i.unidade_medida || 'un'} · mín ${i.quantidade_minima}`;
+        return `
+        <div class="stock-row">
+            <span class="stock-nome" title="${i.nome}">${i.nome}</span>
+            <span class="stock-info ${cls}">${rotulo}</span>
+        </div>`;
+    }).join('');
+    el.innerHTML = items +
+        (alertas.length > 9
+            ? `<p style="font-size:.78rem;color:#95a5a6;margin-top:10px;text-align:right;">+${alertas.length - 9} item(s) — <a href="Relatorios.html" style="color:#3498DB;">ver relatório</a></p>`
+            : '');
+}
+
+window.addEventListener('DOMContentLoaded', carregarDashboard);
+</script>
+</body>
 </html>

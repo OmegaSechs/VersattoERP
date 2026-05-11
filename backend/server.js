@@ -6,6 +6,12 @@ const fastify = require('fastify')({ logger: true });
 const path    = require('path');
 const { verificarToken } = require('./auth');
 
+// ── Cookies (necessário antes do hook JWT) ────────────────────
+fastify.register(require('@fastify/cookie'));
+
+// ── Rate limiting (global: false → aplica só onde configurado)
+fastify.register(require('@fastify/rate-limit'), { global: false });
+
 // ── Estáticos ────────────────────────────────────────────────
 fastify.register(require('@fastify/static'), {
   root: path.join(__dirname, '..', 'frontend', 'public'),
@@ -30,12 +36,13 @@ fastify.register(require('./routes/catalogoRoutes'));
 fastify.register(require('./routes/ordensServicoRoutes'));
 fastify.register(require('./routes/relatoriosRoutes'));
 fastify.register(require('./routes/financeiroRoutes'));
+fastify.register(require('./routes/parametrosRoutes'));
 
 // ── Start ─────────────────────────────────────────────────────
 const start = async () => {
   try {
-    await fastify.listen({ port: process.env.PORT || 3000, host: '0.0.0.0' });
-    console.log(`\n✅  Versatto ERP rodando em http://localhost:${process.env.PORT || 3000}\n`);
+    await fastify.listen({ port: process.env.PORT || 5500, host: '0.0.0.0' });
+    console.log(`\n✅  Versatto ERP rodando em http://localhost:${process.env.PORT || 5500}\n`);
   } catch (erro) {
     fastify.log.error(erro);
     process.exit(1);

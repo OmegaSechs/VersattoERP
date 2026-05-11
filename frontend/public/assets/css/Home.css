@@ -6,63 +6,221 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    min-height: 100vh;
-    background-color: #F5F5F5; /* Fundo claro e neutro */
-    color: #2D3E50; /* Cor padrão do texto */
-}
-
-.page {
-    display: grid;
-    grid-template-areas: 
-    "header header"
-    "content content"
-    "footer footer";
-    grid-template-rows: auto 1fr auto;
-    grid-template-columns: 1fr; 
+    background-color: #F0F2F5;
+    color: #2D3E50;
     min-height: 100vh;
 }
 
-
-.graficos {
+/* ── Banner da empresa ─────────────────────────────── */
+.empresa-header {
+    background: linear-gradient(135deg, #2D3E50 0%, #34495E 100%);
+    border-radius: 12px;
+    padding: 24px 32px;
+    color: #fff;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 50px;
-    flex-wrap: wrap;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 16px rgba(45,62,80,.25);
 }
 
-.pizza-1, .pizza-2, .pizza-3 {
-    background-color: white;
-    padding: 2em;
+.empresa-info h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 4px;
+}
+
+.empresa-info .slogan {
+    font-size: .92rem;
+    color: #c5cfe0;
+    margin: 0;
+}
+
+.data-hora { text-align: right; }
+
+.data-hora .hora {
+    font-size: 2rem;
+    font-weight: 300;
+    color: #c78111;
+    line-height: 1;
+}
+
+.data-hora .data {
+    font-size: .8rem;
+    color: #c5cfe0;
+    margin-top: 6px;
+    text-transform: capitalize;
+}
+
+/* ── KPI cards ──────────────────────────────────────── */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.kpi-card {
+    background: #fff;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
+    border-top: 4px solid #c78111;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.grafico-1, .grafico-2, .grafico-3 {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
+.kpi-card.azul     { border-top-color: #3498DB; }
+.kpi-card.verde    { border-top-color: #27AE60; }
+.kpi-card.vermelho { border-top-color: #E74C3C; }
+.kpi-card.roxo     { border-top-color: #8E44AD; }
+
+.kpi-label {
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    color: #7f8c8d;
+    font-weight: 700;
 }
 
-.grafico-1 {
-    background: conic-gradient(#2ECC71 0% 40%, #F1C40F 40% 75%, #E74C3C 75% 100%);
+.kpi-valor {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #2D3E50;
+    line-height: 1;
 }
 
-.grafico-2 {
-    background: conic-gradient(#8E44AD 0% 35%, #3498DB 35% 90%, #BDC3C7 90% 100%);
+.kpi-sub {
+    font-size: .78rem;
+    color: #95a5a6;
 }
 
-.grafico-3 {
-    background: conic-gradient(#E67E22 0% 24%, #FFC0CB 24% 50%, #2C3E50 50% 100%);
+/* ── Grid inferior ──────────────────────────────────── */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
 
-@media (max-width: 768px) {
-    .sidebar {
-        width: 0; 
-    }
-    .openbtn {
-        display: block;
-    }
+.card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
 }
 
+.card-title {
+    font-size: .72rem;
+    font-weight: 700;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* ── Tabela de OS ───────────────────────────────────── */
+.mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .875rem;
+}
+
+.mini-table th {
+    text-align: left;
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: #95a5a6;
+    padding: 0 6px 8px;
+    border-bottom: 1px solid #f0f0f0;
+    font-weight: 700;
+}
+
+.mini-table td {
+    padding: 8px 6px;
+    border-bottom: 1px solid #f8f8f8;
+    color: #2D3E50;
+}
+
+.mini-table tr:last-child td { border-bottom: none; }
+.mini-table tbody tr:hover td { background: #fafbfc; }
+
+/* ── Status badges ──────────────────────────────────── */
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: .7rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.badge-aberta    { background: #EBF5FB; color: #2980B9; }
+.badge-andamento { background: #FEF9E7; color: #D68910; }
+.badge-concluida { background: #EAFAF1; color: #1E8449; }
+.badge-cancelada { background: #FDEDEC; color: #C0392B; }
+
+/* ── Lista de alertas de estoque ────────────────────── */
+.stock-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid #f4f4f4;
+    font-size: .875rem;
+    gap: 8px;
+}
+
+.stock-row:last-child { border-bottom: none; }
+
+.stock-nome {
+    color: #2D3E50;
+    font-weight: 500;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.stock-info {
+    font-size: .75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.stock-zerado { background: #FDEDEC; color: #C0392B; }
+.stock-baixo  { background: #FEF9E7; color: #D68910; }
+
+/* ── Estados vazios / loading ───────────────────────── */
+.empty-state {
+    text-align: center;
+    color: #95a5a6;
+    font-size: .88rem;
+    padding: 24px 0;
+}
+
+.loading {
+    text-align: center;
+    color: #bdc3c7;
+    font-size: .85rem;
+    padding: 16px 0;
+}
+
+/* ── Responsivo ─────────────────────────────────────── */
+@media (max-width: 860px) {
+    .dashboard-grid  { grid-template-columns: 1fr; }
+    .kpi-grid        { grid-template-columns: 1fr 1fr; }
+    .empresa-header  { flex-direction: column; gap: 16px; }
+    .data-hora       { text-align: left; }
+}
+
+@media (max-width: 480px) {
+    .kpi-grid { grid-template-columns: 1fr; }
+    .empresa-info h1 { font-size: 1.3rem; }
+}

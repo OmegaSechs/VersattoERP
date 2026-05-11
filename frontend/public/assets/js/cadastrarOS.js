@@ -171,29 +171,113 @@ function gerarParcelasPreview() {
     const valor = i === qtd - 1
       ? parseFloat((total - valorBase * (qtd - 1)).toFixed(2))
       : valorBase;
-    parcelasOS.push({ descricao: `Parcela ${i+1}/${qtd}`, valor, vencimento: dateStr });
+    parcelasOS.push({ descricao: '', valor, vencimento: dateStr });
   }
+
+  renderizarParcelas();
+}
+
+function renderizarParcelas() {
+  // mantém descrições sincronizadas com a ordem atual
+  const n = parcelasOS.length;
+  parcelasOS.forEach((p, i) => { p.descricao = `Parcela ${i+1}/${n}`; });
 
   const div = document.getElementById('parcelas-preview');
   div.innerHTML = '';
+  if (!n) return;
+
+  const totalOS       = itensOS.reduce((acc, it) => acc + it.subtotal, 0);
+  const totalParcelas = parcelasOS.reduce((acc, p) => acc + p.valor, 0);
+  const diff          = parseFloat((totalParcelas - totalOS).toFixed(2));
+  const diffOk        = Math.abs(diff) < 0.01;
+  const cor           = diffOk ? '#27ae60' : '#c0392b';
+
   const table = document.createElement('table');
-  table.style.cssText = 'width:100%;border-collapse:collapse;font-size:13px;';
-  table.innerHTML = `<thead><tr style="background:#e8ecf0;">
-    <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;">Parcela</th>
+  table.style.cssText = 'width:100%;border-collapse:collapse;font-size:13px;margin-bottom:8px;';
+
+  const thead = document.createElement('thead');
+  thead.innerHTML = `<tr style="background:#e8ecf0;">
+    <th style="padding:7px 10px;border:1px solid #ddd;text-align:left;width:70px;">Parcela</th>
     <th style="padding:7px 10px;border:1px solid #ddd;">Vencimento</th>
-    <th style="padding:7px 10px;border:1px solid #ddd;text-align:right;">Valor</th>
-  </tr></thead><tbody></tbody>`;
-  const tbody = table.querySelector('tbody');
+    <th style="padding:7px 10px;border:1px solid #ddd;text-align:right;">Valor (R$)</th>
+    <th style="padding:7px 10px;border:1px solid #ddd;width:36px;"></th>
+  </tr>`;
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
   parcelasOS.forEach((p, i) => {
-    const [y,m,d2] = p.vencimento.split('-');
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="padding:7px 10px;border:1px solid #ddd;">${i+1}/${qtd}</td>
-      <td style="padding:7px 10px;border:1px solid #ddd;text-align:center;">${d2}/${m}/${y}</td>
-      <td style="padding:7px 10px;border:1px solid #ddd;text-align:right;">R$ ${p.valor.toFixed(2)}</td>`;
+
+    const tdNum = document.createElement('td');
+    tdNum.style.cssText = 'padding:7px 10px;border:1px solid #ddd;';
+    tdNum.textContent = `${i+1}/${n}`;
+
+    const tdDate = document.createElement('td');
+    tdDate.style.cssText = 'padding:4px 8px;border:1px solid #ddd;';
+    const inputDate = document.createElement('input');
+    inputDate.type = 'date';
+    inputDate.value = p.vencimento;
+    inputDate.style.cssText = 'width:100%;padding:4px;border:1px solid #ccc;border-radius:4px;';
+    inputDate.onchange = () => { parcelasOS[i].vencimento = inputDate.value; };
+    tdDate.appendChild(inputDate);
+
+    const tdVal = document.createElement('td');
+    tdVal.style.cssText = 'padding:4px 8px;border:1px solid #ddd;';
+    const inputVal = document.createElement('input');
+    inputVal.type = 'number';
+    inputVal.step = '0.01';
+    inputVal.min = '0';
+    inputVal.value = p.valor.toFixed(2);
+    inputVal.style.cssText = 'width:100%;padding:4px;border:1px solid #ccc;border-radius:4px;text-align:right;';
+    inputVal.onchange = () => {
+      parcelasOS[i].valor = parseFloat(parseFloat(inputVal.value).toFixed(2)) || 0;
+      renderizarParcelas();
+    };
+    tdVal.appendChild(inputVal);
+
+    const tdAcao = document.createElement('td');
+    tdAcao.style.cssText = 'padding:4px 8px;border:1px solid #ddd;text-align:center;';
+    const btnRem = document.createElement('button');
+    btnRem.type = 'button';
+    btnRem.textContent = '×';
+    btnRem.style.cssText = 'background:#c0392b;color:#fff;border:none;padding:2px 7px;border-radius:4px;cursor:pointer;';
+    btnRem.onclick = () => { parcelasOS.splice(i, 1); renderizarParcelas(); };
+    tdAcao.appendChild(btnRem);
+
+    tr.append(tdNum, tdDate, tdVal, tdAcao);
     tbody.appendChild(tr);
   });
+
+  // linha de total com indicador de diferença
+  const trTotal = document.createElement('tr');
+  trTotal.innerHTML = `
+    <td colspan="2" style="padding:7px 10px;border:1px solid #ddd;text-align:right;font-weight:bold;">Total parcelado:</td>
+    <td style="padding:7px 10px;border:1px solid #ddd;text-align:right;font-weight:bold;color:${cor};">R$ ${totalParcelas.toFixed(2)}</td>
+    <td style="padding:7px 10px;border:1px solid #ddd;font-size:11px;color:${cor};" title="Total da OS: R$ ${totalOS.toFixed(2)}">${diffOk ? '✓' : (diff > 0 ? `+${diff.toFixed(2)}` : diff.toFixed(2))}</td>`;
+  tbody.appendChild(trTotal);
+
+  table.appendChild(tbody);
   div.appendChild(table);
+
+  // botão para adicionar parcela extra manualmente
+  const btnAdd = document.createElement('button');
+  btnAdd.type = 'button';
+  btnAdd.textContent = '+ Parcela';
+  btnAdd.style.cssText = 'padding:6px 14px;background:#fff;border:1px solid #2D3E50;color:#2D3E50;border-radius:4px;cursor:pointer;font-size:12px;';
+  btnAdd.onclick = () => {
+    let nextDate = '';
+    if (parcelasOS.length) {
+      const last = parcelasOS[parcelasOS.length - 1].vencimento;
+      if (last) {
+        const [y, m, d] = last.split('-').map(Number);
+        const nd = new Date(y, m, d); // avança 1 mês
+        nextDate = `${nd.getFullYear()}-${String(nd.getMonth()+1).padStart(2,'0')}-${String(nd.getDate()).padStart(2,'0')}`;
+      }
+    }
+    parcelasOS.push({ descricao: '', valor: 0, vencimento: nextDate });
+    renderizarParcelas();
+  };
+  div.appendChild(btnAdd);
 }
 
 async function cadastrarOS() {
